@@ -2,7 +2,7 @@
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
  */
-    
+
 var SMT = function () {
 
     var genetic = Genetic.create();
@@ -28,16 +28,16 @@ var SMT = function () {
         var len = this.userData["edges"].length;
         var i = Math.floor(Math.random() * len);
 
-        var a = [];
+        var chromosome = [];
         for (var j = 0; j < len; j++) {
             var i = Math.floor(Math.random() * len);
             if (i % 2 == 0)
-                a[j] = 1;
+                chromosome[j] = 1;
             else
-                a[j] = 0;
+                chromosome[j] = 0;
         }
 
-        return a;
+        return chromosome;
     }
 
     /*
@@ -114,9 +114,6 @@ var SMT = function () {
         /*
          * Creating graph from the GA edges using Graph.js
          */
-
-        console.log("GAEdges: " + GAEdges);
-
         for (var i = 0; i < GAEdges.length; i++) {
             console.log(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
             graph.createEdge(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
@@ -204,6 +201,8 @@ var SMT = function () {
         var TotalDisconnected = 0;
         for (var i = 0; i < DisconnectedValuesList.length; i++)
             TotalDisconnected += DisconnectedValuesList[i];
+
+        console.log("GAEdges: " + GAEdges);
 
         console.log("disconnected nodes: " + TotalDisconnected);
 
@@ -395,19 +394,20 @@ var SMT = function () {
     /*
      * Checking whether graph object is working inside a user defned function
      */
-    var tmp = function () {
-        var edges = [[1, 2, 1], [2, 3, 1]];
-        for (var i = 0; i < edges.length; i++) {
-            graph.createEdge(edges[i][0], edges[i][1]);
-            graph.spanEdge(edges[i][1], edges[i][0]);
-        }
-
-        return (graph.hasEdge(2, 1));
-    }
+    //var tmp = function () {
+    //    var edges = [[1, 2, 1], [2, 3, 1]];
+    //    for (var i = 0; i < edges.length; i++) {
+    //        graph.createEdge(edges[i][0], edges[i][1]);
+    //        graph.spanEdge(edges[i][1], edges[i][0]);
+    //    }
+    //
+    //    console.log(GAFitness(edges));
+    //    return (graph.hasEdge(2, 1));
+    //}
 
     console.log(graph);
     console.log(genetic);
-    console.log(tmp());
+    //console.log(tmp());
 
     //test-1 (Extension of GA sheet in google drive)
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
