@@ -92,7 +92,6 @@ var SMT = function () {
         console.log("Chromosome: " + entity);
 
         var fitness = 0;
-        var graph = new Graph();
 
         /*
          * Filtering entity Chromosome by checking bit 1 (on) and 0 (off)
@@ -115,6 +114,9 @@ var SMT = function () {
         /*
          * Creating graph from the GA edges using Graph.js
          */
+
+        var graph = new Graph();
+
         for (var i = 0; i < GAEdges.length; i++) {
             graph.createEdge(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
             graph.spanEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
@@ -122,6 +124,14 @@ var SMT = function () {
 
         console.log("Filtered edges: " + GAEdges);
         console.log("Connected edge length: " + GAEdges.length + " Sum: " + sumEdges + " Max: " + maxEdge);
+
+        //var RequiredNodeList = [
+        //    'transitional sensory area',
+        //    'supplementary sensory area',
+        //    'ventroposterior superior nucleus thalami',
+        //    'receptive field for the foot in area5',
+        //    'globus pallidus  internal part'
+        //];
 
         var RequiredNodeList = [1, 2, 3, 4, 5, 6];
         var DisconnectedValuesList = new Array(RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
@@ -227,12 +237,13 @@ var SMT = function () {
      * isFinished: true when GA is in last generation
      */
     genetic.notification = function (pop, generation, stats, isFinished) {
+        console.log("Notification");
 
         if (isFinished) {
             var solutions = [];
 
+            console.log("Length: ", +pop.length);
             for (var i = 0; i < pop.length; i++) {
-                console.log("Length: ", +pop.length);
                 solutions.push(pop[i].entity);
             }
 
@@ -429,65 +440,72 @@ var SMT = function () {
 
     //test-5 (Getting nodes and edges from data.json)
 
-    var nodes = [];
-    var edges = [];
+    //var nodes = [];
+    //var edges = [];
+    //
+    //d3.json("data.json", function (data) {
+    //
+    //    for (var i = 0; i < data["nodes"].length; i++) {
+    //        nodes[i] = data["nodes"][i];
+    //    }
+    //
+    //    for (var j = 0; j < data["edges"].length; j++) {
+    //        edges.push([]);
+    //        edges[j].push(new Array(4));
+    //        for (var k = 0; k < 4; k++) {
+    //            if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+    //                edges[j][3] = "macaque";
+    //            }
+    //            else if (data["edges"][j][3] == "rattus norvegicus") {
+    //                edges[j][3] = "Rat";
+    //            }
+    //            else {
+    //                edges[j][k] = data["edges"][j][k];
+    //            }
+    //        }
+    //    }
 
-    d3.json("data.json", function (data) {
+    //test-6 (GA sheet in google drive)
 
-        for (var i = 0; i < data["nodes"].length; i++) {
-            nodes[i] = data["nodes"][i];
-        }
+    var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [3, 4, 1]];
+    var edges = [[1, 2, 1], [1, 3, 1], [4, 5, 1], [5, 6, 1]];
+    //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
-        for (var j = 0; j < data["edges"].length; j++) {
-            edges.push([]);
-            edges[j].push(new Array(4));
-            for (var k = 0; k < 4; k++) {
-                if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
-                    edges[j][3] = "macaque";
-                }
-                else if (data["edges"][j][3] == "rattus norvegicus") {
-                    edges[j][3] = "Rat";
-                }
-                else {
-                    edges[j][k] = data["edges"][j][k];
-                }
-            }
-        }
+    /*Configuration parameters
+     * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
+     * @size: Population size, Default - 250, Type - Real Number
+     * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
+     * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
+     * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
+     * Default - 0, Type - Real Number
+     *
+     * (WE MAY USE THESE IN FUTURE)
+     * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
+     * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
+     * Type - Real Number
+     */
+    var config = {
+        "iterations": 2
+        , "size": 5
+        , "crossover": 0.9
+        , "mutation": 0.2
+        , "skip": 0
+        , "webWorkers": false
+    };
 
-        /*Configuration parameters
-         * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
-         * @size: Population size, Default - 250, Type - Real Number
-         * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
-         * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
-         * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
-         * Default - 0, Type - Real Number
-         *
-         * (WE MAY USE THESE IN FUTURE)
-         * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
-         * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
-         * Type - Real Number
-         */
-        var config = {
-            "iterations": 10
-            , "size": 5
-            , "crossover": 0.9
-            , "mutation": 0.2
-            , "skip": 0
-            , "webWorkers": false
-        };
+    /*
+     * Initial data to feed in GA
+     */
+    var userData = {
+        "nodes": nodes,
+        "edges": edges
+    };
 
-        /*
-         * Initial data to feed in GA
-         */
-        var userData = {
-            "nodes": nodes,
-            "edges": edges
-        };
-
-        /*
-         * GA starts beyond this point
-         */
-        genetic.evolve(config, userData);
-    });
+    /*
+     * GA starts beyond this point
+     */
+    genetic.evolve(config, userData);
+    //});
 
 }();
