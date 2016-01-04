@@ -66,6 +66,7 @@ var SMT = function () {
 
         /*
          * two-point crossover
+         * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
          */
         var len = mother.length;
         var ca = Math.floor(Math.random() * len);
@@ -388,14 +389,16 @@ var SMT = function () {
     }
 
     //test-1 (Extension of GA sheet in google drive)
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35];
-    var edges = [[1, 2, 1], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 15, 1], [15, 16, 1],
-        [15, 11, 1], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1], [14, 8, 1], [5, 25, 1],
-        [25, 24, 1], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1], [4, 35, 1], [4, 20, 1],
-        [20, 22, 1], [4, 33, 1], [33, 34, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1], [17, 18, 1], [18, 19, 1]];
+
+    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    //    30, 31, 32, 33, 34, 35];
+    //var edges = [[1, 2, 1], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 15, 1], [15, 16, 1],
+    //    [15, 11, 1], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1], [14, 8, 1], [5, 25, 1],
+    //    [25, 24, 1], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1], [4, 35, 1], [4, 20, 1],
+    //    [20, 22, 1], [4, 33, 1], [33, 34, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1], [17, 18, 1], [18, 19, 1]];
 
     //test-2 (Extension of GA sheet in google drive)
+
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
     //var edges = [[1, 2, 1], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 3, 1], [1, 15, 1], [15, 16, 1],
@@ -404,6 +407,7 @@ var SMT = function () {
     //    [4, 5, 1], [5, 6, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1], [17, 18, 1], [18, 19, 1]];
 
     //test-3 (Extension of GA sheet in google drive)
+
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
     //var edges = [[1, 2, 1], [2, 29, 1], [2, 3, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 15, 1],
@@ -413,6 +417,7 @@ var SMT = function () {
     //    [17, 18, 1], [18, 19, 1]];
 
     //test-4 (GA example for 50 nodes)
+
     //    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
     //    var edges = [[1, 14, 1], [14, 28, 1], [39, 15, 1], [15, 14, 1], [1, 13, 1], [13, 27, 1], [27, 26, 1],
@@ -422,38 +427,67 @@ var SMT = function () {
     //        [33, 32, 1], [32, 31, 1], [31, 6, 1], [6, 7, 1], [7, 3, 1], [3, 10, 1], [10, 23, 1], [8, 9, 1], [23, 22, 1],
     //        [22, 21, 1], [19, 20, 1], [20, 21, 1]];
 
-    /*Configuration parameters
-     * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
-     * @size: Population size, Default - 250, Type - Real Number
-     * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
-     * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
-     * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
-     * Default - 0, Type - Real Number
-     *
-     * (WE MAY USE THESE IN FUTURE)
-     * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
-     * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
-     * Type - Real Number
-     */
-    var config = {
-        "iterations": 10
-        , "size": 5
-        , "crossover": 0.9
-        , "mutation": 0.2
-        , "skip": 0
-        , "webWorkers": false
-    };
+    //test-5 (Getting nodes and edges from data.json)
 
-    /*
-     * Initial data to feed in GA
-     */
-    var userData = {
-        "nodes": nodes,
-        "edges": edges
-    };
+    var nodes = [];
+    var edges = [];
 
-    /*
-     * GA starts beyond this point
-     */
-    genetic.evolve(config, userData);
+    d3.json("data.json", function (data) {
+
+        for (var i = 0; i < data["nodes"].length; i++) {
+            nodes[i] = data["nodes"][i];
+        }
+
+        for (var j = 0; j < data["edges"].length; j++) {
+            edges.push([]);
+            edges[j].push(new Array(4));
+            for (var k = 0; k < 4; k++) {
+                if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+                    edges[j][3] = "macaque";
+                }
+                else if (data["edges"][j][3] == "rattus norvegicus") {
+                    edges[j][3] = "Rat";
+                }
+                else {
+                    edges[j][k] = data["edges"][j][k];
+                }
+            }
+        }
+
+        /*Configuration parameters
+         * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
+         * @size: Population size, Default - 250, Type - Real Number
+         * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
+         * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
+         * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
+         * Default - 0, Type - Real Number
+         *
+         * (WE MAY USE THESE IN FUTURE)
+         * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
+         * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
+         * Type - Real Number
+         */
+        var config = {
+            "iterations": 10
+            , "size": 5
+            , "crossover": 0.9
+            , "mutation": 0.2
+            , "skip": 0
+            , "webWorkers": false
+        };
+
+        /*
+         * Initial data to feed in GA
+         */
+        var userData = {
+            "nodes": nodes,
+            "edges": edges
+        };
+
+        /*
+         * GA starts beyond this point
+         */
+        genetic.evolve(config, userData);
+    });
+
 }();
