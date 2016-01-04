@@ -3,6 +3,7 @@
  * Library: Genetic.js, Graph.js
  */
 
+
 var SMT = function () {
 
     var genetic = Genetic.create();
@@ -10,8 +11,6 @@ var SMT = function () {
     genetic.optimize = Genetic.Optimize.Minimize;
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
-
-    var graph = new Graph();
 
     /*
      * Called to create a chromosome, can be of any type (int, float, string, array, object
@@ -89,9 +88,10 @@ var SMT = function () {
      */
     genetic.fitness = function (entity) {
 
-        console.log("Fitness Funtions: " + entity);
+        console.log("Chromosome: " + entity);
 
         var fitness = 0;
+        var graph = new Graph();
 
         /*
          * Filtering entity Chromosome by checking bit 1 (on) and 0 (off)
@@ -115,13 +115,12 @@ var SMT = function () {
          * Creating graph from the GA edges using Graph.js
          */
         for (var i = 0; i < GAEdges.length; i++) {
-            console.log(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
             graph.createEdge(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
             graph.spanEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
         }
 
-        console.log("connected edges: " + GAEdges);
-        console.log("connected length of edge: " + GAEdges.length + " sum: " + sumEdges + " max: " + maxEdge);
+        console.log("Filtered edges: " + GAEdges);
+        console.log("Connected edge length: " + GAEdges.length + " Sum: " + sumEdges + " Max: " + maxEdge);
 
         var RequiredNodeList = [1, 2, 3, 4, 5, 6];
         var DisconnectedValuesList = new Array(RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
@@ -202,13 +201,11 @@ var SMT = function () {
         for (var i = 0; i < DisconnectedValuesList.length; i++)
             TotalDisconnected += DisconnectedValuesList[i];
 
-        console.log("GAEdges: " + GAEdges);
-
-        console.log("disconnected nodes: " + TotalDisconnected);
+        console.log("Total disconnected nodes: " + TotalDisconnected);
 
         fitness = sumEdges + (maxEdge * TotalDisconnected);
 
-        console.log("Fitness: " + fitness, maxEdge);
+        console.log("Fitness returned: " + fitness, maxEdge);
         return fitness;
     }
 
@@ -390,25 +387,6 @@ var SMT = function () {
         }
     }
 
-
-    /*
-     * Checking whether graph object is working inside a user defned function
-     */
-    //var tmp = function () {
-    //    var edges = [[1, 2, 1], [2, 3, 1]];
-    //    for (var i = 0; i < edges.length; i++) {
-    //        graph.createEdge(edges[i][0], edges[i][1]);
-    //        graph.spanEdge(edges[i][1], edges[i][0]);
-    //    }
-    //
-    //    console.log(GAFitness(edges));
-    //    return (graph.hasEdge(2, 1));
-    //}
-
-    console.log(graph);
-    console.log(genetic);
-    //console.log(tmp());
-
     //test-1 (Extension of GA sheet in google drive)
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35];
@@ -463,6 +441,7 @@ var SMT = function () {
         , "crossover": 0.9
         , "mutation": 0.2
         , "skip": 0
+        , "webWorkers": false
     };
 
     /*
