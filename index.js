@@ -84,12 +84,11 @@ var SMT = function () {
         return [son, daughter];
     }
 
-    /*
-     * Computes a fitness score for a chromosome
-     */
-    genetic.fitness = function (entity) {
+    genetic.ourfitnesscalc = function (chromosome) {
+        var entity = chromosome;
 
-        console.log("Chromosome: " + entity);
+        //console.log("Fitness function ****************** ");
+        //console.log("Chromosome: " + entity);
 
         var fitness = 0;
 
@@ -102,10 +101,10 @@ var SMT = function () {
         var len = this.userData["edges"].length;
         var edges = this.userData["edges"];
         for (var i = 0; i < len; i++) {
-            if (entity[i] == 1) {
-                if (edges[i][2] > maxEdge)
-                    maxEdge = edges[i][2];
+            if (edges[i][2] > maxEdge)
+                maxEdge = edges[i][2];
 
+            if (entity[i] == 1) {
                 sumEdges += edges[i][2];
                 GAEdges.push(edges[i]);
             }
@@ -119,18 +118,18 @@ var SMT = function () {
 
         for (var i = 0; i < GAEdges.length; i++) {
             graph.createEdge(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
-            graph.spanEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
+            graph.createEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
         }
 
-        console.log("Filtered edges: " + GAEdges);
-        console.log("Connected edge length: " + GAEdges.length + " Sum: " + sumEdges + " Max: " + maxEdge);
+        //console.log("Filtered edges: " + GAEdges);
+        //console.log("Connected edge length: " + GAEdges.length + " Sum: " + sumEdges + " Max: " + maxEdge);
 
         //var RequiredNodeList = [
         //    'transitional sensory area',
         //    'supplementary sensory area',
         //    'ventroposterior superior nucleus thalami',
         //    'receptive field for the foot in area5',
-        //    'globus pallidus  internal part'
+        //    'globus pallidus internal part'
         //];
 
         var RequiredNodeList = [1, 2, 3, 4, 5, 6];
@@ -150,6 +149,7 @@ var SMT = function () {
         for (var i = 0; i < RequiredNodeList.length; i++)
             SearchList[i] = RequiredNodeList[i];
 
+        //console.log("SearchList: " + SearchList);
         /*
          * For All SearchList[i] Not in Graph, assign MaxDisconnected
          * value to DisconnectedValueList and "true" to AttemptedList
@@ -162,6 +162,7 @@ var SMT = function () {
             }
         }
 
+        //console.log("DisconnectedValueList before: " + DisconnectedValuesList);
         /*
          * We should not have any nodes in required node list that do not
          * exist into the GA solution beyond this point.
@@ -174,6 +175,7 @@ var SMT = function () {
 
             AttemptedList[i] = true;
             FoundList = FoundList.concat(i);
+            //console.log(FoundList);
             for (var j = i + 1; j < SearchList.length; j++) {
                 /*
                  * If true Then this node is not in our Graph
@@ -187,6 +189,7 @@ var SMT = function () {
                 if (graph.hasPath(SearchList[i], SearchList[j])) {
                     FoundList = FoundList.concat(j);
                     AttemptedList[j] = true;
+                    //console.log(FoundList);
                 }
             }
 
@@ -199,6 +202,7 @@ var SMT = function () {
                 DisconnectedValuesList[FoundList[m]] = RequiredNodeList.length - FoundList.length;
             }
 
+            //console.log("DisconnectedValueList after: " + DisconnectedValuesList);
             /*
              * Empty FoundList
              */
@@ -212,12 +216,20 @@ var SMT = function () {
         for (var i = 0; i < DisconnectedValuesList.length; i++)
             TotalDisconnected += DisconnectedValuesList[i];
 
-        console.log("Total disconnected nodes: " + TotalDisconnected);
+        //console.log("Chromosome: ", entity);
+        //console.log("Total disconnected nodes: " + TotalDisconnected);
 
-        fitness = sumEdges + (maxEdge * TotalDisconnected);
+        fitness = sumEdges + (maxEdge * TotalDisconnected * (RequiredNodeList.length * (RequiredNodeList.length -1))/2);
 
         console.log("Fitness returned: " + fitness, maxEdge);
         return fitness;
+    }
+
+    /*
+     * Computes a fitness score for a chromosome
+     */
+    genetic.fitness = function (entity) {
+        return this.ourfitnesscalc(entity);
     }
 
     /*
@@ -229,7 +241,7 @@ var SMT = function () {
     }
 
     /*
-     * Runs once for each generation.
+     * Run once for each generation.
      * All functions other than this one are run in a web worker
      * pop: gives chromosomes for each generation
      * generation: number of generation
@@ -240,30 +252,51 @@ var SMT = function () {
         console.log("Notification");
 
         if (isFinished) {
-            var solutions = [];
+            console.log("isFinished ***************************");
 
-            console.log("Length: ", +pop.length);
+            var solutions = [];
+            var GAresult = [];
+
+            console.log("Length of chromosomes: ", +pop.length);
             for (var i = 0; i < pop.length; i++) {
                 solutions.push(pop[i].entity);
             }
 
             var len = this.userData["edges"].length;
             var edges = this.userData["edges"];
+
+            var bestsolutionIndex = 0, bestsolution = this.ourfitnesscalc(solutions[0]);
+
             for (var i = 0; i < solutions.length; i++) {
-                var GAresult = [];
-                for (var j = 0; j < len; j++) {
-                    if (solutions[i][j] == 1) {
-                        GAresult.push(edges[j]);
-                    }
+                if (this.ourfitnesscalc(solutions[i]) < bestsolution) {
+                    bestsolution = this.ourfitnesscalc(solutions[i]);
+                    bestsolutionIndex = i;
                 }
-
-                console.log(solutions[i]);
-                console.log(GAresult);
-
-                draw(GAresult);
             }
+
+            var result = [];
+            console.log("FINAL GA RESULT: ", solutions[bestsolutionIndex]);
+            console.log("FINAL GA RESULT FITNESS: ", bestsolution);
+            for (var i = 0; i < solutions[bestsolutionIndex].length; i++) {
+                if (solutions[bestsolutionIndex][i] == 1) {
+                    //result[0] = this.userData["edges"][i][0];
+                    //result[1] = this.userData["edges"][i][1];
+                    //result[2] = this.userData["edges"][i][2];
+                    //result[3] = "macaque";
+                    result.push([
+                        this.userData["edges"][i][0],
+                        this.userData["edges"][i][1],
+                        this.userData["edges"][i][2],
+                        "macaque"
+                    ])
+                }
+            }
+
+            console.log(result);
+            draw(result);
         }
     }
+
 
     /*
      * Visualization of Steiner Minimal Tree using GA
@@ -292,6 +325,9 @@ var SMT = function () {
                 (nodes[link.target] = {name: link.target});
             //console.log(link.target);
         });
+
+        console.log(links);
+        console.log(nodes);
 
         var g = document.getElementById("#svgVisualize"),
             width = window.innerWidth,
@@ -322,43 +358,43 @@ var SMT = function () {
             .start();
 
         //filter unique species from the result
-        var species = [];
-        var py = 20;
+        //var species = [];
+        //var py = 20;
 
-        for (var i = 0; i < result.length; i++) {
-            species[i] = result[i][3];
-        }
+        //for (var i = 0; i < result.length; i++) {
+        //    species[i] = result[i][3];
+        //}
 
-        species = species.filter(function (item, pos) {
-            return species.indexOf(item) == pos;
-        })
+        //species = species.filter(function (item, pos) {
+        //    return species.indexOf(item) == pos;
+        //})
 
         // add the links and the arrows
         var path = svg.append("svg:g").selectAll("path")
             .data(force.links())
             .enter().append("svg:path")
             .attr("class", "link")
-            .style("stroke", function (d) {
-                for (var i = 0; i < species.length; i++) {
-                    if (d.species == species[i]) {
-                        svg.append("text")
-                            .style("font", "14px sans-serif")
-                            .attr("stroke", color(d.species))
-                            .attr("x", 10)
-                            .attr("y", py)
-                            .text(d.species)
+//            .style("stroke", function (d) {
+        //for (var i = 0; i < species.length; i++) {
+        //    if (d.species == species[i]) {
+        //        svg.append("text")
+        //            .style("font", "14px sans-serif")
+        //            .attr("stroke", color(d.species))
+        //            .attr("x", 10)
+        //            .attr("y", py)
+        //            .text(d.species)
+        //
+        //        //forward one step to get distinct color
+        //        color(d.species + 1);
+        //        py = py + 20;
+        //        species[i] = "";
+        //        break;
+        //    }
+        //}
 
-                        //forward one step to get distinct color
-                        color(d.species + 1);
-                        py = py + 20;
-                        species[i] = "";
-                        break;
-                    }
-                }
-
-                return color(d.species);
-            })
-            .attr("marker-end", "url(#end)");
+        //return color(d.species);
+        //})
+        //.attr("marker-end", "url(#end)");
 
         // define the nodes
         var node = svg.selectAll(".node")
@@ -376,6 +412,7 @@ var SMT = function () {
             .attr("x", 12)
             .attr("dy", ".35em")
             .text(function (d) {
+                console.log(d.name);
                 return d.name;
             });
 
@@ -429,14 +466,14 @@ var SMT = function () {
 
     //test-4 (GA example for 50 nodes)
 
-    //    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
-    //    var edges = [[1, 14, 1], [14, 28, 1], [39, 15, 1], [15, 14, 1], [1, 13, 1], [13, 27, 1], [27, 26, 1],
-    //        [26, 12, 1], [12, 2, 1], [12, 11, 1], [11, 25, 1], [11, 24, 1], [16, 4, 1], [4, 17, 1], [17, 5, 1],
-    //        [17, 18, 1], [17, 29, 1], [29, 38, 1], [29, 37, 1], [37, 40, 1], [40, 45, 1], [40, 46, 1], [37, 41, 1],
-    //        [41, 47, 1], [41, 42, 1], [48, 49, 1], [49, 43, 1], [44, 50, 1], [30, 34, 1], [34, 35, 1], [35, 36, 1],
-    //        [33, 32, 1], [32, 31, 1], [31, 6, 1], [6, 7, 1], [7, 3, 1], [3, 10, 1], [10, 23, 1], [8, 9, 1], [23, 22, 1],
-    //        [22, 21, 1], [19, 20, 1], [20, 21, 1]];
+    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
+    var edges = [[1, 14, 1], [14, 28, 1], [39, 15, 1], [15, 14, 1], [1, 13, 1], [13, 27, 1], [27, 26, 1],
+        [26, 12, 1], [12, 2, 1], [12, 11, 1], [11, 25, 1], [11, 24, 1], [16, 4, 1], [4, 17, 1], [5, 17, 1],
+        [17, 18, 1], [17, 29, 1], [29, 38, 1], [29, 37, 1], [37, 40, 1], [40, 45, 1], [40, 46, 1], [37, 41, 1],
+        [41, 47, 1], [41, 42, 1], [48, 49, 1], [49, 43, 1], [44, 50, 1], [30, 34, 1], [34, 35, 1], [35, 36, 1],
+        [33, 32, 1], [32, 31, 1], [31, 6, 1], [6, 7, 1], [7, 3, 1], [3, 10, 1], [10, 23, 1], [8, 9, 1], [23, 22, 1],
+        [22, 21, 1], [19, 20, 1], [20, 21, 1]];
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -467,9 +504,9 @@ var SMT = function () {
 
     //test-6 (GA sheet in google drive)
 
-    var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [3, 4, 1]];
-    var edges = [[1, 2, 1], [1, 3, 1], [4, 5, 1], [5, 6, 1]];
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [3, 4, 1], [5, 6, 1], [1, 3, 1]];
+    //var edges = [[1, 2, 1], [1, 3, 1], [4, 5, 1], [5, 6, 1]];
     //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     /*Configuration parameters
@@ -486,8 +523,8 @@ var SMT = function () {
      * Type - Real Number
      */
     var config = {
-        "iterations": 2
-        , "size": 5
+        "iterations": 50
+        , "size": 100
         , "crossover": 0.9
         , "mutation": 0.2
         , "skip": 0
@@ -507,5 +544,4 @@ var SMT = function () {
      */
     genetic.evolve(config, userData);
     //});
-
 }();
