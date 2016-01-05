@@ -5,6 +5,8 @@
 
 
 var SMT = function () {
+    //var previousfitness = 0;
+    //var fitnessunchanged = 0;
 
     var genetic = Genetic.create();
 
@@ -85,6 +87,7 @@ var SMT = function () {
     }
 
     genetic.ourfitnesscalc = function (chromosome) {
+
         var entity = chromosome;
 
         //console.log("Fitness function ****************** ");
@@ -219,7 +222,7 @@ var SMT = function () {
         //console.log("Chromosome: ", entity);
         //console.log("Total disconnected nodes: " + TotalDisconnected);
 
-        fitness = sumEdges + (maxEdge * TotalDisconnected * (RequiredNodeList.length * (RequiredNodeList.length -1))/2);
+        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected);
 
         console.log("Fitness returned: " + fitness, maxEdge);
         return fitness;
@@ -229,6 +232,8 @@ var SMT = function () {
      * Computes a fitness score for a chromosome
      */
     genetic.fitness = function (entity) {
+        //importScripts("http://localhost:63342/SMT-Genetic/node_modules/graph.js/dist/graph.full.js");
+
         return this.ourfitnesscalc(entity);
     }
 
@@ -251,6 +256,20 @@ var SMT = function () {
     genetic.notification = function (pop, generation, stats, isFinished) {
         console.log("Notification");
 
+        //console.log("MAX AND MIN: ", stats.maximum, stats.minimum);
+        //
+        //if (previousfitness != stats.maximum) {
+        //    previousfitness = stats.maximum;
+        //    fitnessunchanged = 0;
+        //}
+        //else {
+        //    fitnessunchanged++;
+        //    if(fitnessunchanged > 2){
+        //        isFinished = true;
+        //    }
+        //}
+        //
+        //console.log("MAX isFinished before", previousfitness, fitnessunchanged);
         if (isFinished) {
             console.log("isFinished ***************************");
 
@@ -302,7 +321,6 @@ var SMT = function () {
      * Visualization of Steiner Minimal Tree using GA
      */
     function draw(result) {
-
         var links = [];
         for (var i = 0; i < result.length; i++) {
             links.push({
@@ -358,43 +376,43 @@ var SMT = function () {
             .start();
 
         //filter unique species from the result
-        //var species = [];
-        //var py = 20;
+        var species = [];
+        var py = 20;
 
-        //for (var i = 0; i < result.length; i++) {
-        //    species[i] = result[i][3];
-        //}
+        for (var i = 0; i < result.length; i++) {
+            species[i] = result[i][3];
+        }
 
-        //species = species.filter(function (item, pos) {
-        //    return species.indexOf(item) == pos;
-        //})
+        species = species.filter(function (item, pos) {
+            return species.indexOf(item) == pos;
+        })
 
         // add the links and the arrows
         var path = svg.append("svg:g").selectAll("path")
             .data(force.links())
             .enter().append("svg:path")
             .attr("class", "link")
-//            .style("stroke", function (d) {
-        //for (var i = 0; i < species.length; i++) {
-        //    if (d.species == species[i]) {
-        //        svg.append("text")
-        //            .style("font", "14px sans-serif")
-        //            .attr("stroke", color(d.species))
-        //            .attr("x", 10)
-        //            .attr("y", py)
-        //            .text(d.species)
-        //
-        //        //forward one step to get distinct color
-        //        color(d.species + 1);
-        //        py = py + 20;
-        //        species[i] = "";
-        //        break;
-        //    }
-        //}
+            .style("stroke", function (d) {
+                for (var i = 0; i < species.length; i++) {
+                    if (d.species == species[i]) {
+                        svg.append("text")
+                            .style("font", "14px sans-serif")
+                            .attr("stroke", color(d.species))
+                            .attr("x", 10)
+                            .attr("y", py)
+                            .text(d.species)
 
-        //return color(d.species);
-        //})
-        //.attr("marker-end", "url(#end)");
+                        //forward one step to get distinct color
+                        color(d.species + 1);
+                        py = py + 20;
+                        species[i] = "";
+                        break;
+                    }
+                }
+
+                return color(d.species);
+            })
+            .attr("marker-end", "url(#end)");
 
         // define the nodes
         var node = svg.selectAll(".node")
@@ -523,7 +541,7 @@ var SMT = function () {
      * Type - Real Number
      */
     var config = {
-        "iterations": 50
+        "iterations": 100
         , "size": 100
         , "crossover": 0.9
         , "mutation": 0.2
@@ -542,6 +560,10 @@ var SMT = function () {
     /*
      * GA starts beyond this point
      */
+    var start = new Date().getTime();
     genetic.evolve(config, userData);
+
+    var end = new Date().getTime();
+    console.log("Time: ", end - start);
     //});
 }();
