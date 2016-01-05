@@ -256,27 +256,11 @@ var SMT = function () {
     genetic.notification = function (pop, generation, stats, isFinished) {
         console.log("Notification");
 
-        var solutions = [];
-
-        console.log("Length of chromosomes: ", +pop.length);
-        for (var i = 0; i < pop.length; i++) {
-            solutions.push(pop[i].entity);
-        }
-
-        var bestsolutionIndex = 0, bestsolution = this.ourfitnesscalc(solutions[0]);
-
-        for (var i = 0; i < solutions.length; i++) {
-            if (this.ourfitnesscalc(solutions[i]) < bestsolution) {
-                bestsolution = this.ourfitnesscalc(solutions[i]);
-                bestsolutionIndex = i;
-            }
-        }
-
         var result = [];
-        console.log("GA RESULT: ", solutions[bestsolutionIndex]);
-        console.log("GA RESULT FITNESS: ", bestsolution);
-        for (var i = 0; i < solutions[bestsolutionIndex].length; i++) {
-            if (solutions[bestsolutionIndex][i] == 1) {
+        console.log("GA RESULT RESULT: ", pop[0].entity);
+        console.log("GA RESULT FITNESS: ", this.ourfitnesscalc(pop[0].entity));
+        for (var i = 0; i < pop[0].entity.length; i++) {
+            if (pop[0].entity[i] == 1) {
                 result.push([
                     this.userData["edges"][i][0],
                     this.userData["edges"][i][1],
@@ -306,30 +290,10 @@ var SMT = function () {
         if (isFinished) {
             console.log("isFinished ***************************");
 
-            var solutions = [];
-
-            console.log("Length of chromosomes: ", +pop.length);
-            for (var i = 0; i < pop.length; i++) {
-                solutions.push(pop[i].entity);
-            }
-
-            var len = this.userData["edges"].length;
-            var edges = this.userData["edges"];
-
-            var bestsolutionIndex = 0, bestsolution = this.ourfitnesscalc(solutions[0]);
-
-            for (var i = 0; i < solutions.length; i++) {
-                if (this.ourfitnesscalc(solutions[i]) < bestsolution) {
-                    bestsolution = this.ourfitnesscalc(solutions[i]);
-                    bestsolutionIndex = i;
-                }
-            }
-
-            var result = [];
-            console.log("FINAL GA RESULT: ", solutions[bestsolutionIndex]);
-            console.log("FINAL GA RESULT FITNESS: ", bestsolution);
-            for (var i = 0; i < solutions[bestsolutionIndex].length; i++) {
-                if (solutions[bestsolutionIndex][i] == 1) {
+            console.log("FINAL GA RESULT RESULT: ", pop[0].entity);
+            console.log("FINAL GA RESULT FITNESS: ", this.ourfitnesscalc(pop[0].entity));
+            for (var i = 0; i < pop[0].entity.length; i++) {
+                if (pop[0].entity[i] == 1) {
                     result.push([
                         this.userData["edges"][i][0],
                         this.userData["edges"][i][1],
