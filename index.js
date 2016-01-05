@@ -5,6 +5,8 @@
 
 
 var SMT = function () {
+    var start = new Date().getTime();
+
     //var previousfitness = 0;
     //var fitnessunchanged = 0;
 
@@ -253,12 +255,22 @@ var SMT = function () {
      * stats: possible to do statistical result - standard deviation, mean, etc
      * isFinished: true when GA is in last generation
      */
+
+    genetic.sleep = function (milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
+    
     genetic.notification = function (pop, generation, stats, isFinished) {
         console.log("Notification");
 
         var result = [];
-        console.log("GA RESULT RESULT: ", pop[0].entity);
-        console.log("GA RESULT FITNESS: ", this.ourfitnesscalc(pop[0].entity));
+        console.log("GA RESULT: ", pop[0].entity);
+        console.log("GA FITNESS: ", this.ourfitnesscalc(pop[0].entity));
         for (var i = 0; i < pop[0].entity.length; i++) {
             if (pop[0].entity[i] == 1) {
                 result.push([
@@ -271,7 +283,18 @@ var SMT = function () {
         }
 
         console.log(result);
-        draw(result);
+
+        if (!isFinished) {
+            console.log("!isFinished: ", result);
+            this.draw(result);
+            console.log("NOT isFinished");
+            //window.location.reload();
+            //d3.select("svg").remove();
+
+            //genetic.sleep(5000);
+
+            d3.select("#svgVisualize").selectAll("svg").remove();
+        }
 
         //console.log("MAX AND MIN: ", stats.maximum, stats.minimum);
         //
@@ -290,8 +313,8 @@ var SMT = function () {
         if (isFinished) {
             console.log("isFinished ***************************");
 
-            console.log("FINAL GA RESULT RESULT: ", pop[0].entity);
-            console.log("FINAL GA RESULT FITNESS: ", this.ourfitnesscalc(pop[0].entity));
+            console.log("FINAL GA RESULT: ", pop[0].entity);
+            console.log("FINAL GA FITNESS: ", this.ourfitnesscalc(pop[0].entity));
             for (var i = 0; i < pop[0].entity.length; i++) {
                 if (pop[0].entity[i] == 1) {
                     result.push([
@@ -304,7 +327,9 @@ var SMT = function () {
             }
 
             console.log(result);
-            draw(result);
+
+            //d3.select("svg").remove();
+            this.draw(result);
         }
     }
 
@@ -312,7 +337,8 @@ var SMT = function () {
     /*
      * Visualization of Steiner Minimal Tree using GA
      */
-    function draw(result) {
+    genetic.draw = function (result) {
+
         var links = [];
         for (var i = 0; i < result.length; i++) {
             links.push({
@@ -336,30 +362,29 @@ var SMT = function () {
             //console.log(link.target);
         });
 
-        //var g = document.getElementById("#svgVisualize"),
-        //    width = window.innerWidth,
-        //    height = window.innerHeight;
-        //
-        //var svg = d3.select("#svgVisualize").append("svg")
-        //    .attr("width", width)
-        //    .attr("height", height)
-        //    .append("g")
-        //
-        //function updateWindow() {
-        //    width = window.innerWidth;
-        //    height = window.innerHeight;
-        //    svg.attr("width", width).attr("height", height);
-        //}
-        //
-        //window.onresize = updateWindow;
-
-        var width = window.innerWidth,
+        var g = document.getElementById("#svgVisualize"),
+            width = window.innerWidth,
             height = window.innerHeight;
 
         var svg = d3.select("#svgVisualize").append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .append("g")
 
+        function updateWindow() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            svg.attr("width", width).attr("height", height);
+        }
+
+        window.onresize = updateWindow;
+
+        //var width = window.innerWidth,
+        //    height = window.innerHeight;
+        //
+        //var svg = d3.select("#svgVisualize").append("svg")
+        //    .attr("width", width)
+        //    .attr("height", height);
 
         var color = d3.scale.category20();
 
@@ -576,11 +601,15 @@ var SMT = function () {
     /*
      * GA starts beyond this point
      */
-    var start = new Date().getTime();
-
     genetic.evolve(config, userData);
 
     var end = new Date().getTime();
     console.log("Execution Time: ", end - start);
+    d3.select("#svgVisualize").append("text")
+        .attr("stroke", "black")
+        .attr("x", 10)
+        .attr("y", 110)
+        .style("font", "14px sans-serif")
+        .text(end - start + " milliseconds");
     //});
 }();
