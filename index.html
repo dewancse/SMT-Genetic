@@ -23,10 +23,11 @@
 
         @media screen and (min-width: 600px) {
             .graph {
-                position: fixed;
+                /*position: fixed;*/
                 width: 100%;
                 height: 100%;
                 border: 1px solid #e3e3e3;
+                overflow-x: hidden;
             }
         }
 
@@ -35,8 +36,19 @@
 </head>
 <body>
 
-<svg id="svgVisualize" class="graph"></svg>
+<!--<svg id="svgVisualize" class="graph"></svg>-->
+<!--<svg id="svgVisualize" width="1200" height="700"></svg>-->
 
+<div id="svgVisualize" class="graph" align="center"></div>
+
+<!--<div align="center">-->
+    <!--<table border="2px">-->
+        <!--<tr>-->
+            <!--<td id="svgVisualize" class="graph"> &lt;!&ndash;width="500" height="400"&ndash;&gt;-->
+            <!--</td>-->
+        <!--</tr>-->
+    <!--</table>-->
+<!--</div>-->
 
 <script src="node_modules/graph.js/dist/graph.full.js"></script>
 <script src="node_modules/genetic-js/lib/genetic.js"></script>

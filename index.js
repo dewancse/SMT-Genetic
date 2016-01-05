@@ -256,6 +256,39 @@ var SMT = function () {
     genetic.notification = function (pop, generation, stats, isFinished) {
         console.log("Notification");
 
+        var solutions = [];
+
+        console.log("Length of chromosomes: ", +pop.length);
+        for (var i = 0; i < pop.length; i++) {
+            solutions.push(pop[i].entity);
+        }
+
+        var bestsolutionIndex = 0, bestsolution = this.ourfitnesscalc(solutions[0]);
+
+        for (var i = 0; i < solutions.length; i++) {
+            if (this.ourfitnesscalc(solutions[i]) < bestsolution) {
+                bestsolution = this.ourfitnesscalc(solutions[i]);
+                bestsolutionIndex = i;
+            }
+        }
+
+        var result = [];
+        console.log("GA RESULT: ", solutions[bestsolutionIndex]);
+        console.log("GA RESULT FITNESS: ", bestsolution);
+        for (var i = 0; i < solutions[bestsolutionIndex].length; i++) {
+            if (solutions[bestsolutionIndex][i] == 1) {
+                result.push([
+                    this.userData["edges"][i][0],
+                    this.userData["edges"][i][1],
+                    this.userData["edges"][i][2],
+                    this.userData["edges"][i][3]
+                ])
+            }
+        }
+
+        console.log(result);
+        draw(result);
+
         //console.log("MAX AND MIN: ", stats.maximum, stats.minimum);
         //
         //if (previousfitness != stats.maximum) {
@@ -274,7 +307,6 @@ var SMT = function () {
             console.log("isFinished ***************************");
 
             var solutions = [];
-            var GAresult = [];
 
             console.log("Length of chromosomes: ", +pop.length);
             for (var i = 0; i < pop.length; i++) {
@@ -340,25 +372,30 @@ var SMT = function () {
             //console.log(link.target);
         });
 
-        //console.log(links);
-        //console.log(nodes);
+        //var g = document.getElementById("#svgVisualize"),
+        //    width = window.innerWidth,
+        //    height = window.innerHeight;
+        //
+        //var svg = d3.select("#svgVisualize").append("svg")
+        //    .attr("width", width)
+        //    .attr("height", height)
+        //    .append("g")
+        //
+        //function updateWindow() {
+        //    width = window.innerWidth;
+        //    height = window.innerHeight;
+        //    svg.attr("width", width).attr("height", height);
+        //}
+        //
+        //window.onresize = updateWindow;
 
-        var g = document.getElementById("#svgVisualize"),
-            width = window.innerWidth,
+        var width = window.innerWidth,
             height = window.innerHeight;
 
         var svg = d3.select("#svgVisualize").append("svg")
             .attr("width", width)
-            .attr("height", height)
-            .append("g")
+            .attr("height", height);
 
-        function updateWindow() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            svg.attr("width", width).attr("height", height);
-        }
-
-        window.onresize = updateWindow;
 
         var color = d3.scale.category20();
 
@@ -372,6 +409,7 @@ var SMT = function () {
             .start();
 
         //filter unique species from the result
+        //display species name on top-left corner
         var species = [];
         var py = 20;
 
@@ -383,7 +421,7 @@ var SMT = function () {
             return species.indexOf(item) == pos;
         })
 
-        // add the links and the arrows
+        // add the links and the arrows with unique colors for each species
         var path = svg.append("svg:g").selectAll("path")
             .data(force.links())
             .enter().append("svg:path")
@@ -481,15 +519,15 @@ var SMT = function () {
 
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
-    var edges = [[1, 14, 1, "macaque"], [14, 28, 1, "Rat"], [39, 15, 1, "Birds"], [15, 14, 1], [1, 13, 1, "Homo sapiens"],
-        [13, 27, 1, "Rat"], [27, 26, 1, "Birds"], [26, 12, 1, "macaque"], [12, 2, 1, "Rat"], [12, 11, 1, "Birds"],
-        [11, 25, 1, "macaque"], [11, 24, 1, "Rat"], [16, 4, 1, "Birds"], [4, 17, 1, "macaque"], [5, 17, 1, "Rat"],
-        [17, 18, 1, "Birds"], [17, 29, 1, "macaque"], [29, 38, 1, "Rat"], [29, 37, 1, "Birds"], [37, 40, 1, "macaque"],
-        [40, 45, 1, "Rat"], [40, 46, 1, "Birds"], [37, 41, 1, "macaque"], [41, 47, 1, "Rat"], [41, 42, 1, "Birds"],
-        [48, 49, 1, "macaque"], [49, 43, 1, "Rat"], [44, 50, 1, "Birds"], [30, 34, 1, "macaque"], [34, 35, 1, "Rat"],
-        [35, 36, 1, "Birds"], [33, 32, 1, "macaque"], [32, 31, 1, "Rat"], [31, 6, 1, "Birds"], [6, 7, 1, "Homo sapiens"],
-        [7, 3, 1, "Rat"], [3, 10, 1, "Birds"], [10, 23, 1, "macaque"], [8, 9, 1, "Rat"], [23, 22, 1, "Birds"], [22, 21, 1, "macaque"],
-        [19, 20, 1, "Rat"], [20, 21, 1, "Birds"]];
+    var edges = [[1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"],
+        [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"],
+        [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
+        [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"],
+        [40, 45, 5, "Rat"], [40, 46, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"],
+        [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"],
+        [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
+        [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+        [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -538,6 +576,8 @@ var SMT = function () {
      * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
      * Type - Real Number
      */
+
+    //working version of all examples for iterations: 50 and size: 100
     var config = {
         "iterations": 100
         , "size": 100
