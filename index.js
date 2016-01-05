@@ -298,15 +298,11 @@ var SMT = function () {
             console.log("FINAL GA RESULT FITNESS: ", bestsolution);
             for (var i = 0; i < solutions[bestsolutionIndex].length; i++) {
                 if (solutions[bestsolutionIndex][i] == 1) {
-                    //result[0] = this.userData["edges"][i][0];
-                    //result[1] = this.userData["edges"][i][1];
-                    //result[2] = this.userData["edges"][i][2];
-                    //result[3] = "macaque";
                     result.push([
                         this.userData["edges"][i][0],
                         this.userData["edges"][i][1],
                         this.userData["edges"][i][2],
-                        "macaque"
+                        this.userData["edges"][i][3]
                     ])
                 }
             }
@@ -344,8 +340,8 @@ var SMT = function () {
             //console.log(link.target);
         });
 
-        console.log(links);
-        console.log(nodes);
+        //console.log(links);
+        //console.log(nodes);
 
         var g = document.getElementById("#svgVisualize"),
             width = window.innerWidth,
@@ -370,7 +366,7 @@ var SMT = function () {
             .nodes(d3.values(nodes))
             .links(links)
             .size([width, height])
-            .linkDistance(300)
+            .linkDistance(100)
             .charge(-1000)
             .on("tick", tick)
             .start();
@@ -430,7 +426,6 @@ var SMT = function () {
             .attr("x", 12)
             .attr("dy", ".35em")
             .text(function (d) {
-                console.log(d.name);
                 return d.name;
             });
 
@@ -486,12 +481,15 @@ var SMT = function () {
 
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
-    var edges = [[1, 14, 1], [14, 28, 1], [39, 15, 1], [15, 14, 1], [1, 13, 1], [13, 27, 1], [27, 26, 1],
-        [26, 12, 1], [12, 2, 1], [12, 11, 1], [11, 25, 1], [11, 24, 1], [16, 4, 1], [4, 17, 1], [5, 17, 1],
-        [17, 18, 1], [17, 29, 1], [29, 38, 1], [29, 37, 1], [37, 40, 1], [40, 45, 1], [40, 46, 1], [37, 41, 1],
-        [41, 47, 1], [41, 42, 1], [48, 49, 1], [49, 43, 1], [44, 50, 1], [30, 34, 1], [34, 35, 1], [35, 36, 1],
-        [33, 32, 1], [32, 31, 1], [31, 6, 1], [6, 7, 1], [7, 3, 1], [3, 10, 1], [10, 23, 1], [8, 9, 1], [23, 22, 1],
-        [22, 21, 1], [19, 20, 1], [20, 21, 1]];
+    var edges = [[1, 14, 1, "macaque"], [14, 28, 1, "Rat"], [39, 15, 1, "Birds"], [15, 14, 1], [1, 13, 1, "Homo sapiens"],
+        [13, 27, 1, "Rat"], [27, 26, 1, "Birds"], [26, 12, 1, "macaque"], [12, 2, 1, "Rat"], [12, 11, 1, "Birds"],
+        [11, 25, 1, "macaque"], [11, 24, 1, "Rat"], [16, 4, 1, "Birds"], [4, 17, 1, "macaque"], [5, 17, 1, "Rat"],
+        [17, 18, 1, "Birds"], [17, 29, 1, "macaque"], [29, 38, 1, "Rat"], [29, 37, 1, "Birds"], [37, 40, 1, "macaque"],
+        [40, 45, 1, "Rat"], [40, 46, 1, "Birds"], [37, 41, 1, "macaque"], [41, 47, 1, "Rat"], [41, 42, 1, "Birds"],
+        [48, 49, 1, "macaque"], [49, 43, 1, "Rat"], [44, 50, 1, "Birds"], [30, 34, 1, "macaque"], [34, 35, 1, "Rat"],
+        [35, 36, 1, "Birds"], [33, 32, 1, "macaque"], [32, 31, 1, "Rat"], [31, 6, 1, "Birds"], [6, 7, 1, "Homo sapiens"],
+        [7, 3, 1, "Rat"], [3, 10, 1, "Birds"], [10, 23, 1, "macaque"], [8, 9, 1, "Rat"], [23, 22, 1, "Birds"], [22, 21, 1, "macaque"],
+        [19, 20, 1, "Rat"], [20, 21, 1, "Birds"]];
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -561,9 +559,10 @@ var SMT = function () {
      * GA starts beyond this point
      */
     var start = new Date().getTime();
+
     genetic.evolve(config, userData);
 
     var end = new Date().getTime();
-    console.log("Time: ", end - start);
+    console.log("Execution Time: ", end - start);
     //});
 }();
