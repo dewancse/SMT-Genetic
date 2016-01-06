@@ -12,7 +12,7 @@ var SMT = function () {
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
 
-    genetic.RequiredNodeList = [39, 2, 28];
+    genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
 
     genetic.ConnectedPaths = function () {
 
@@ -67,8 +67,8 @@ var SMT = function () {
         }
 
         console.log("set of chromosomes");
-        for(var i = 0; i < chromosomes.length; i++)
-        console.log(chromosomes[i]);
+        for (var i = 0; i < chromosomes.length; i++)
+            console.log(chromosomes[i]);
 
         //set of chromosomes
         return chromosomes;
@@ -97,18 +97,22 @@ var SMT = function () {
             console.log("chromosome: ", this.chromosomes2[this.c]);
 
             this.c++;
-            return this.chromosomes2[this.c-1]; // this.chromosomes2.shift();
+            return this.chromosomes2[this.c - 1]; // this.chromosomes2.shift();
         }
 
-        if (this.c < this.len) {
-            console.log("SEED IF this.chromosomes", this.chromosomes2, this.len);
-            console.log("chromosome: ", this.chromosomes2[this.c]);
-
+        if (this.c % 2 == 0) {
             this.c++;
-            return this.chromosomes2[this.c-1]; //this.chromosomes2.shift();
+            return this.chromosomes2[Math.floor(Math.random() * this.len)];
         }
+        //console.log("SEED IF this.chromosomes", this.chromosomes2, this.len);
+        //console.log("chromosome: ", this.chromosomes2[this.c]);
+        //
+        //this.c++;
+        //return this.chromosomes2[this.c - 1]; //this.chromosomes2.shift();
         else {
             console.log("SEED ELSE");
+            this.c++;
+
             var chromosome = [];
             var len = this.userData["edges"].length;
             var i = Math.floor(Math.random() * len);
@@ -232,22 +236,22 @@ var SMT = function () {
         //    'globus pallidus internal part'
         //];
 
-        var RequiredNodeList = [39, 2, 28];
-        var DisconnectedValuesList = new Array(RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
+        //var RequiredNodeList = [1, 2, 3, 4, 5, 6, 39];
+        var DisconnectedValuesList = new Array(this.RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
 
         var SearchList = [];
         var FoundList = [];
         var AttemptedList = [];
-        for (var i = 0; i < RequiredNodeList.length; i++)
+        for (var i = 0; i < this.RequiredNodeList.length; i++)
             AttemptedList[i] = false;
 
-        var MaxDisconnected = RequiredNodeList.length - 1;
+        var MaxDisconnected = this.RequiredNodeList.length - 1;
 
         /*
          * Assign RequiredList values to SearchList
          */
-        for (var i = 0; i < RequiredNodeList.length; i++)
-            SearchList[i] = RequiredNodeList[i];
+        for (var i = 0; i < this.RequiredNodeList.length; i++)
+            SearchList[i] = this.RequiredNodeList[i];
 
         //console.log("SearchList: " + SearchList);
         /*
@@ -297,9 +301,9 @@ var SMT = function () {
              * Populate DisconnectedValuesList corresponding
              * positions for nodes in SourceList and FoundList
              */
-            DisconnectedValuesList[i] = RequiredNodeList.length - FoundList.length;
+            DisconnectedValuesList[i] = this.RequiredNodeList.length - FoundList.length;
             for (var m = 0; m < FoundList.length; m++) {
-                DisconnectedValuesList[FoundList[m]] = RequiredNodeList.length - FoundList.length;
+                DisconnectedValuesList[FoundList[m]] = this.RequiredNodeList.length - FoundList.length;
             }
 
             //console.log("DisconnectedValueList after: " + DisconnectedValuesList);
@@ -319,7 +323,7 @@ var SMT = function () {
         //console.log("Chromosome: ", entity);
         //console.log("Total disconnected nodes: " + TotalDisconnected);
 
-        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected);
+        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected * TotalDisconnected);
 
         console.log("Fitness returned: " + fitness, maxEdge);
         return fitness;
