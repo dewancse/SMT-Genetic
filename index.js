@@ -2,11 +2,7 @@
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
  */
-
-
 var SMT = function () {
-    var start = new Date().getTime();
-
     //var previousfitness = 0;
     //var fitnessunchanged = 0;
 
@@ -16,6 +12,71 @@ var SMT = function () {
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
 
+    genetic.RequiredNodeList = [39, 2, 28];
+
+    genetic.ConnectedPaths = function () {
+
+        var graph = new Graph();
+        var edges = this.userData["edges"];
+        var chromosomes = [];
+
+        for (var i = 0; i < edges.length; i++) {
+            graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
+            graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
+        }
+
+        var paths = [];
+        for (var i = 0; i < this.RequiredNodeList.length; i++) {
+            for (var j = i + 1; j < this.RequiredNodeList.length; j++) {
+                // iterates over all paths between `from` and `to` in the graph
+                for (var it = graph.paths(this.RequiredNodeList[i], this.RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
+                    var path = kv.value;
+                    paths.push([path]);
+                    chromosomes.push(chromos(paths.shift()));
+                }
+            }
+        }
+
+        function chromos(path) {
+            var myEdges = [];
+            for (var i = 0; i < path.length; i++) {
+                if (path[i].length > 2) {
+                    for (var j = 0; j < path[i].length - 1;) {
+                        myEdges.push([path[i][j], path[i][++j]]);
+                    }
+                }
+                else
+                    myEdges.push(path[i]);
+            }
+
+            console.log("myEdges: ", myEdges);
+
+            var chromosome = new Array(edges.length + 1).join('0').split('').map(parseFloat);
+            for (var i = 0; i < myEdges.length; i++) {
+                for (var j = 0; j < edges.length; j++) {
+                    if ((myEdges[i][0] == edges[j][0] && myEdges[i][1] == edges[j][1]) || (myEdges[i][1] == edges[j][0] && myEdges[i][0] == edges[j][1])) {
+                        chromosome[j] = 1;
+                    }
+                }
+            }
+
+            //console.log("Chromosome: ", chromosome);
+
+            //single chromosome for each path
+            return chromosome;
+        }
+
+        console.log("set of chromosomes");
+        for(var i = 0; i < chromosomes.length; i++)
+        console.log(chromosomes[i]);
+
+        //set of chromosomes
+        return chromosomes;
+    }
+
+    genetic.chromosomes2 = [];
+    genetic.c = 0;
+    genetic.len = 0;
     /*
      * Called to create a chromosome, can be of any type (int, float, string, array, object
      */
@@ -27,20 +88,43 @@ var SMT = function () {
          * Else put 0
          */
 
-        console.log("SEED");
-        var len = this.userData["edges"].length;
-        var i = Math.floor(Math.random() * len);
+        console.log("counter c", this.c);
 
-        var chromosome = [];
-        for (var j = 0; j < len; j++) {
-            var i = Math.floor(Math.random() * len);
-            if (i % 2 == 0)
-                chromosome[j] = 1;
-            else
-                chromosome[j] = 0;
+        if (this.c == 0) {
+            this.chromosomes2 = this.ConnectedPaths();
+            this.len = this.chromosomes2.length;
+            console.log("SEED 0 this.chromosomes: ", this.chromosomes2, this.len);
+            console.log("chromosome: ", this.chromosomes2[this.c]);
+
+            this.c++;
+            return this.chromosomes2[this.c-1]; // this.chromosomes2.shift();
         }
 
-        return chromosome;
+        if (this.c < this.len) {
+            console.log("SEED IF this.chromosomes", this.chromosomes2, this.len);
+            console.log("chromosome: ", this.chromosomes2[this.c]);
+
+            this.c++;
+            return this.chromosomes2[this.c-1]; //this.chromosomes2.shift();
+        }
+        else {
+            console.log("SEED ELSE");
+            var chromosome = [];
+            var len = this.userData["edges"].length;
+            var i = Math.floor(Math.random() * len);
+
+            for (var j = 0; j < len; j++) {
+                var i = Math.floor(Math.random() * len);
+                if (i % 2 == 0)
+                    chromosome[j] = 1;
+                else
+                    chromosome[j] = 0;
+            }
+
+            return chromosome;
+        }
+
+        //return this.chromosomes;
     }
 
     /*
@@ -49,6 +133,7 @@ var SMT = function () {
     genetic.mutate = function (entity) {
 
         var len = entity.length;
+
         var ca = Math.floor(Math.random() * len);
         var cb = Math.floor(Math.random() * len);
 
@@ -72,6 +157,16 @@ var SMT = function () {
          * two-point crossover
          * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
          */
+        //for (var i = 0; i < mother.length; i++) {
+        //    var p = Math.floor(Math.random() * 2);
+        //
+        //    if (p == 1) {
+        //        var temp = mother[i];
+        //        mother[i] = father[i];
+        //        father[i] = temp;
+        //    }
+        //}
+
         var len = mother.length;
         var ca = Math.floor(Math.random() * len);
         var cb = Math.floor(Math.random() * len);
@@ -137,7 +232,7 @@ var SMT = function () {
         //    'globus pallidus internal part'
         //];
 
-        var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+        var RequiredNodeList = [39, 2, 28];
         var DisconnectedValuesList = new Array(RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
 
         var SearchList = [];
@@ -224,7 +319,7 @@ var SMT = function () {
         //console.log("Chromosome: ", entity);
         //console.log("Total disconnected nodes: " + TotalDisconnected);
 
-        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected);
+        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected);
 
         console.log("Fitness returned: " + fitness, maxEdge);
         return fitness;
@@ -256,15 +351,6 @@ var SMT = function () {
      * isFinished: true when GA is in last generation
      */
 
-    genetic.sleep = function (milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-            if ((new Date().getTime() - start) > milliseconds) {
-                break;
-            }
-        }
-    }
-    
     genetic.notification = function (pop, generation, stats, isFinished) {
         console.log("Notification");
 
@@ -282,19 +368,8 @@ var SMT = function () {
             }
         }
 
-        console.log(result);
-
-        if (!isFinished) {
-            console.log("!isFinished: ", result);
-            this.draw(result);
-            console.log("NOT isFinished");
-            //window.location.reload();
-            //d3.select("svg").remove();
-
-            //genetic.sleep(5000);
-
-            d3.select("#svgVisualize").selectAll("svg").remove();
-        }
+        //console.log(result);
+        this.draw(result);
 
         //console.log("MAX AND MIN: ", stats.maximum, stats.minimum);
         //
@@ -326,9 +401,10 @@ var SMT = function () {
                 }
             }
 
-            console.log(result);
+            console.log("isFinished result: ", result);
 
             //d3.select("svg").remove();
+            //d3.select("#svgVisualize").selectAll("svg").remove();
             this.draw(result);
         }
     }
@@ -362,29 +438,29 @@ var SMT = function () {
             //console.log(link.target);
         });
 
-        var g = document.getElementById("#svgVisualize"),
-            width = window.innerWidth,
-            height = window.innerHeight;
-
-        var svg = d3.select("#svgVisualize").append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-
-        function updateWindow() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            svg.attr("width", width).attr("height", height);
-        }
-
-        window.onresize = updateWindow;
-
-        //var width = window.innerWidth,
+        //var g = document.getElementById("#svgVisualize"),
+        //    width = window.innerWidth,
         //    height = window.innerHeight;
         //
         //var svg = d3.select("#svgVisualize").append("svg")
         //    .attr("width", width)
-        //    .attr("height", height);
+        //    .attr("height", height)
+        //    .append("g")
+        //
+        //function updateWindow() {
+        //    width = window.innerWidth;
+        //    height = window.innerHeight;
+        //    svg.attr("width", width).attr("height", height);
+        //}
+        //
+        //window.onresize = updateWindow;
+
+        var width = window.innerWidth,
+            height = window.innerHeight;
+
+        var svg = d3.select("#svgVisualize").append("svg")
+            .attr("width", width)
+            .attr("height", height);
 
         var color = d3.scale.category20();
 
@@ -506,31 +582,30 @@ var SMT = function () {
 
     //test-4 (GA example for 50 nodes)
 
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    var edges = [[1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"],
-        [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"],
-        [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-        [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"],
-        [40, 45, 5, "Rat"], [40, 46, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"],
-        [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"],
-        [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-        [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-        [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
-
-    //Test-5 between SMT and GA-SMT
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 2, 15, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"],
-    //    [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"],
-    //    [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"],
-    //    [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"],
-    //    [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"], [40, 46, 7, "Birds"],
-    //    [112, 111, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"],
-    //    [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"],
-    //    [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"],
-    //    [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+    //var edges = [[1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"],
+    //    [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"],
+    //    [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
+    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"],
+    //    [40, 45, 5, "Rat"], [40, 46, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"],
+    //    [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"],
+    //    [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
+    //    [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
     //    [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
+
+    //Test-5 between SMT and GA-SMT
+    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    var edges = [[3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
+        [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
+        [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
+        [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+        [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
+        [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
+        [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
+        [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
+        [20, 21, 7, "Birds"]];
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -583,11 +658,12 @@ var SMT = function () {
     //working version of all examples for iterations: 50 and size: 100
     var config = {
         "iterations": 100
-        , "size": 100
+        , "size": 250
         , "crossover": 0.9
         , "mutation": 0.2
         , "skip": 0
         , "webWorkers": false
+        , "fittestAlwaysSurvives": true
     };
 
     /*
@@ -601,6 +677,8 @@ var SMT = function () {
     /*
      * GA starts beyond this point
      */
+    var start = new Date().getTime();
+
     genetic.evolve(config, userData);
 
     var end = new Date().getTime();
