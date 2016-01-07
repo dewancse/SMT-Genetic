@@ -13,6 +13,7 @@ var SMT = function () {
     genetic.select2 = Genetic.Select2.Tournament2;
 
     genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
+    genetic.EdgeList = [];
 
     genetic.ConnectedPaths = function () {
 
@@ -20,24 +21,14 @@ var SMT = function () {
         var edges = this.userData["edges"];
         var chromosomes = [];
 
+        //console.log("EdgeList ConnectedPaths: ", edges);
+
         for (var i = 0; i < edges.length; i++) {
             graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
             graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
         }
 
-        var paths = [];
-        for (var i = 0; i < this.RequiredNodeList.length; i++) {
-            for (var j = i + 1; j < this.RequiredNodeList.length; j++) {
-                // iterates over all paths between `from` and `to` in the graph
-                for (var it = graph.paths(this.RequiredNodeList[i], this.RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
-                    var path = kv.value;
-                    paths.push([path]);
-                    chromosomes.push(chromos(paths.shift()));
-                }
-            }
-        }
-
-        function chromos(path) {
+        genetic.chromos = function (path) {
             var myEdges = [];
             for (var i = 0; i < path.length; i++) {
                 if (path[i].length > 2) {
@@ -50,6 +41,8 @@ var SMT = function () {
             }
 
             console.log("myEdges: ", myEdges);
+            for (var i = 0; i < myEdges.length; i++)
+                this.EdgeList.push(myEdges[i]);
 
             var chromosome = new Array(edges.length + 1).join('0').split('').map(parseFloat);
             for (var i = 0; i < myEdges.length; i++) {
@@ -66,9 +59,23 @@ var SMT = function () {
             return chromosome;
         }
 
+        var paths = [];
+        for (var i = 0; i < this.RequiredNodeList.length; i++) {
+            for (var j = i + 1; j < this.RequiredNodeList.length; j++) {
+                // iterates over all paths between `from` and `to` in the graph
+                for (var it = graph.paths(this.RequiredNodeList[i], this.RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
+                    var path = kv.value;
+                    paths.push([path]);
+                    chromosomes.push(this.chromos(paths.shift()));
+                }
+            }
+        }
+
         console.log("set of chromosomes");
         for (var i = 0; i < chromosomes.length; i++)
             console.log(chromosomes[i]);
+
+        //console.log("EdgeList: ", this.EdgeList);
 
         //set of chromosomes
         return chromosomes;
@@ -77,6 +84,7 @@ var SMT = function () {
     genetic.chromosomes2 = [];
     genetic.c = 0;
     genetic.len = 0;
+    genetic.index = 0;
     /*
      * Called to create a chromosome, can be of any type (int, float, string, array, object
      */
@@ -94,15 +102,27 @@ var SMT = function () {
             this.chromosomes2 = this.ConnectedPaths();
             this.len = this.chromosomes2.length;
             console.log("SEED 0 this.chromosomes: ", this.chromosomes2, this.len);
-            console.log("chromosome: ", this.chromosomes2[this.c]);
+
+            var ValuesList = new Array(this.chromosomes2[0].length + 1).join('1').split('').map(parseFloat);
+            console.log("chromosome: ", ValuesList);
 
             this.c++;
-            return this.chromosomes2[this.c - 1]; // this.chromosomes2.shift();
+            return ValuesList; // this.chromosomes2.shift();
         }
 
         if (this.c % 2 == 0) {
             this.c++;
-            return this.chromosomes2[Math.floor(Math.random() * this.len)];
+            //var r = Math.floor(Math.random() * this.len);
+            console.log("chromosome: ", this.chromosomes2[this.index], this.index);
+            if (this.index < this.len) {
+                this.index++;
+                if (this.index == this.len) {
+                    this.index = 0;
+                    return this.chromosomes2[this.len - 1];
+                }
+
+                return this.chromosomes2[this.index - 1];
+            }
         }
         //console.log("SEED IF this.chromosomes", this.chromosomes2, this.len);
         //console.log("chromosome: ", this.chromosomes2[this.c]);
@@ -110,22 +130,25 @@ var SMT = function () {
         //this.c++;
         //return this.chromosomes2[this.c - 1]; //this.chromosomes2.shift();
         else {
-            console.log("SEED ELSE");
             this.c++;
-
-            var chromosome = [];
-            var len = this.userData["edges"].length;
-            var i = Math.floor(Math.random() * len);
-
-            for (var j = 0; j < len; j++) {
-                var i = Math.floor(Math.random() * len);
-                if (i % 2 == 0)
-                    chromosome[j] = 1;
-                else
-                    chromosome[j] = 0;
-            }
-
-            return chromosome;
+            var ValuesList = new Array(this.chromosomes2[0].length + 1).join('1').split('').map(parseFloat);
+            return ValuesList;
+            //console.log("SEED ELSE");
+            //
+            //var chromosome = [];
+            //var len = this.userData["edges"].length;
+            ////console.log("EdgeList len SEED: ", len);
+            //var i = Math.floor(Math.random() * len);
+            //
+            //for (var j = 0; j < len; j++) {
+            //    var i = Math.floor(Math.random() * len);
+            //    if (i % 2 == 0)
+            //        chromosome[j] = 1;
+            //    else
+            //        chromosome[j] = 0;
+            //}
+            //
+            //return chromosome;
         }
 
         //return this.chromosomes;
@@ -189,6 +212,7 @@ var SMT = function () {
 
     genetic.ourfitnesscalc = function (chromosome) {
 
+        console.log("ourfitness chromosome: ", chromosome);
         var entity = chromosome;
 
         //console.log("Fitness function ****************** ");
@@ -204,6 +228,8 @@ var SMT = function () {
         var sumEdges = 0, maxEdge = 0, GAEdges = [];
         var len = this.userData["edges"].length;
         var edges = this.userData["edges"];
+
+        //console.log("EdgeList ourfitnesscalc: ", edges);
         for (var i = 0; i < len; i++) {
             if (edges[i][2] > maxEdge)
                 maxEdge = edges[i][2];
@@ -321,11 +347,11 @@ var SMT = function () {
             TotalDisconnected += DisconnectedValuesList[i];
 
         //console.log("Chromosome: ", entity);
-        //console.log("Total disconnected nodes: " + TotalDisconnected);
+        console.log("sumEdges, TotalDisconnected, maxEdge: ", sumEdges, TotalDisconnected, maxEdge);
 
-        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected * TotalDisconnected);
+        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected);
 
-        console.log("Fitness returned: " + fitness, maxEdge);
+        console.log("Fitness returned: " + fitness);
         return fitness;
     }
 
@@ -601,7 +627,7 @@ var SMT = function () {
     //Test-5 between SMT and GA-SMT
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    var edges = [[3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
+    var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
         [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
         [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
         [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
@@ -670,12 +696,95 @@ var SMT = function () {
         , "fittestAlwaysSurvives": true
     };
 
+    // ***************** START ******************* //
+
+    var EdgeList = [];
+    var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+
+    var ConnectedPaths = function () {
+
+        var graph = new Graph();
+        //var edges = this.userData["edges"];
+        var chromosomes = [];
+
+        for (var i = 0; i < edges.length; i++) {
+            graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
+            graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
+        }
+
+        var paths = [];
+        for (var i = 0; i < RequiredNodeList.length; i++) {
+            for (var j = i + 1; j < RequiredNodeList.length; j++) {
+                // iterates over all paths between `from` and `to` in the graph
+                for (var it = graph.paths(RequiredNodeList[i], RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
+                    var path = kv.value;
+                    paths.push([path]);
+                    chromosomes.push(chromos(paths.shift()));
+                }
+            }
+        }
+
+        function chromos(path) {
+            var myEdges = [];
+            for (var i = 0; i < path.length; i++) {
+                if (path[i].length > 2) {
+                    for (var j = 0; j < path[i].length - 1;) {
+                        myEdges.push([path[i][j], path[i][++j]]);
+                    }
+                }
+                else
+                    myEdges.push(path[i]);
+            }
+
+            //console.log("myEdges: ", myEdges);
+            while (myEdges.length != 0)
+                EdgeList.push(myEdges.shift());
+
+            var chromosome = new Array(edges.length + 1).join('0').split('').map(parseFloat);
+            for (var i = 0; i < myEdges.length; i++) {
+                for (var j = 0; j < edges.length; j++) {
+                    if ((myEdges[i][0] == edges[j][0] && myEdges[i][1] == edges[j][1]) || (myEdges[i][1] == edges[j][0] && myEdges[i][0] == edges[j][1])) {
+                        chromosome[j] = 1;
+                    }
+                }
+            }
+
+            //console.log("Chromosome: ", chromosome);
+
+            //single chromosome for each path
+            return chromosome;
+        }
+
+        //console.log(chromosomes.length, chromosomes);
+
+        //console.log("EdgeList: ", EdgeList);
+        //for (var i = 0; i < EdgeList.length; i++) {
+        //    console.log(EdgeList[i]);
+        //}
+
+        //set of chromosomes for all paths
+        //return chromosomes;
+
+        return EdgeList;
+    }
+
+    EdgeList = ConnectedPaths();
+    console.log("userData", EdgeList);
+    for (var i = 0; i < EdgeList.length; i++) {
+        for (var j = 0; j < edges.length; j++) {
+            if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1]))
+                EdgeList[i][2] = edges[j][2];
+        }
+    }
+    console.log("userData after edge", EdgeList);
+
+    // ***************** END ********************* //
     /*
      * Initial data to feed in GA
      */
     var userData = {
         "nodes": nodes,
-        "edges": edges
+        "edges": EdgeList
     };
 
     /*
