@@ -15,13 +15,22 @@ var SMT = function () {
     genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
     genetic.EdgeList = [];
 
+
+    /*
+     * Find chromosomes from the paths generated from RequiredNodeList
+     * using Graph.js. Each path represents a chromosome. See example below.
+     * RequiredNodeList = [1, 2, 3, 4, 5, 6]
+     * [[1,2,21],
+     * [1,111,7],[111,112,7],[112,2,7],
+     * [1,13,1],[13,27,5],[27,26,7],[26,12,2],[12,2,5],
+     * [3,7,5],[7,6,1],
+     * [4,17,2],[17,5,5]]
+     */
     genetic.ConnectedPaths = function () {
 
         var graph = new Graph();
         var edges = this.userData["edges"];
         var chromosomes = [];
-
-        //console.log("EdgeList ConnectedPaths: ", edges);
 
         for (var i = 0; i < edges.length; i++) {
             graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
@@ -53,8 +62,6 @@ var SMT = function () {
                 }
             }
 
-            //console.log("Chromosome: ", chromosome);
-
             //single chromosome for each path
             return chromosome;
         }
@@ -75,13 +82,11 @@ var SMT = function () {
         for (var i = 0; i < chromosomes.length; i++)
             console.log(chromosomes[i]);
 
-        //console.log("EdgeList: ", this.EdgeList);
-
         //set of chromosomes
         return chromosomes;
     }
 
-    genetic.chromosomes2 = [];
+    genetic.ourchromosomes = [];
     genetic.c = 0;
     genetic.len = 0;
     genetic.index = 0;
@@ -91,37 +96,53 @@ var SMT = function () {
     genetic.seed = function () {
 
         /*
-         * create random seed that are equal in length to solution
-         * If random number is divisible by 2 Then put 1
-         * Else put 0
+         * creating 50% seed from the combination of our chromosomes
+         * and the rest from sequentially from the chromosomes
          */
 
         console.log("counter c", this.c);
 
+        /*
+         * Initial seed is the combination of our set of chromosomes
+         * That means, all index is 1 in chromosomes array
+         * @this.c -> maintains number entry in SEED function
+         */
         if (this.c == 0) {
-            this.chromosomes2 = this.ConnectedPaths();
-            this.len = this.chromosomes2.length;
-            console.log("SEED 0 this.chromosomes: ", this.chromosomes2, this.len);
+            this.ourchromosomes = this.ConnectedPaths();
+            this.len = this.ourchromosomes.length;
 
-            var ValuesList = new Array(this.chromosomes2[0].length + 1).join('1').split('').map(parseFloat);
-            console.log("chromosome: ", ValuesList);
+            /*
+             * mixchromosomes is the combination of our chromosomes, so all is 1
+             */
+            var mixchromosomes = new Array(this.ourchromosomes[0].length + 1).join('1').split('').map(parseFloat);
+            console.log("Initial, Combined chromosome: ", mixchromosomes);
 
             this.c++;
-            return ValuesList; // this.chromosomes2.shift();
+            return mixchromosomes;
         }
 
+        /*
+         * If divisible by 2 Then get our chromosomes sequentially
+         * @this.index -> maintains index number in our chromosome array
+         */
         if (this.c % 2 == 0) {
             this.c++;
             //var r = Math.floor(Math.random() * this.len);
-            console.log("chromosome: ", this.chromosomes2[this.index], this.index);
+            console.log("Even, Sequential chromosome: ", this.ourchromosomes[this.index], this.index);
             if (this.index < this.len) {
                 this.index++;
+
+                /*
+                 * Reinitialize index to 0 when index is equal to length of our chromosomes
+                 * because there is no element in chromosomes array. So if length is 4 then
+                 * chromosomes would be between index 0 to 3.
+                 */
                 if (this.index == this.len) {
                     this.index = 0;
-                    return this.chromosomes2[this.len - 1];
+                    return this.ourchromosomes[this.len - 1];
                 }
 
-                return this.chromosomes2[this.index - 1];
+                return this.ourchromosomes[this.index - 1];
             }
         }
         //console.log("SEED IF this.chromosomes", this.chromosomes2, this.len);
@@ -129,10 +150,18 @@ var SMT = function () {
         //
         //this.c++;
         //return this.chromosomes2[this.c - 1]; //this.chromosomes2.shift();
+
+        /*
+         * Again, seed is the combination of our set of chromosomes
+         * That means, all index is 1 in chromosomes array
+         */
         else {
             this.c++;
-            var ValuesList = new Array(this.chromosomes2[0].length + 1).join('1').split('').map(parseFloat);
-            return ValuesList;
+            var mixchromosomes = new Array(this.ourchromosomes[0].length + 1).join('1').split('').map(parseFloat);
+
+            console.log("Odd, Combined chromosome: ", mixchromosomes);
+            return mixchromosomes;
+
             //console.log("SEED ELSE");
             //
             //var chromosome = [];
@@ -184,16 +213,6 @@ var SMT = function () {
          * two-point crossover
          * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
          */
-        //for (var i = 0; i < mother.length; i++) {
-        //    var p = Math.floor(Math.random() * 2);
-        //
-        //    if (p == 1) {
-        //        var temp = mother[i];
-        //        mother[i] = father[i];
-        //        father[i] = temp;
-        //    }
-        //}
-
         var len = mother.length;
         var ca = Math.floor(Math.random() * len);
         var cb = Math.floor(Math.random() * len);
@@ -246,6 +265,9 @@ var SMT = function () {
 
         var graph = new Graph();
 
+        /*
+         * Creating edges with reverse edges
+         */
         for (var i = 0; i < GAEdges.length; i++) {
             graph.createEdge(GAEdges[i][0], GAEdges[i][1], GAEdges[i][2]);
             graph.createEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
@@ -262,7 +284,6 @@ var SMT = function () {
         //    'globus pallidus internal part'
         //];
 
-        //var RequiredNodeList = [1, 2, 3, 4, 5, 6, 39];
         var DisconnectedValuesList = new Array(this.RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
 
         var SearchList = [];
@@ -503,8 +524,10 @@ var SMT = function () {
             .on("tick", tick)
             .start();
 
-        //filter unique species from the result
-        //display species name on top-left corner
+        /*
+         * filter unique species from the result
+         * display species name on top-left corner
+         */
         var species = [];
         var py = 20;
 
@@ -586,29 +609,30 @@ var SMT = function () {
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 15, 1], [15, 16, 1],
-    //    [15, 11, 1], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1], [14, 8, 1], [5, 25, 1],
-    //    [25, 24, 1], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1], [4, 35, 1], [4, 20, 1],
-    //    [20, 22, 1], [4, 33, 1], [33, 34, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1], [17, 18, 1], [18, 19, 1]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1, "macaque"], [1, 15, 1], [15, 16, 1],
+    //    [15, 11, 1], [11, 12, 1, "macaque"], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1, "macaque"], [14, 8, 1], [5, 25, 1],
+    //    [25, 24, 1], [5, 26, 1, "macaque"], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1, "macaque"], [4, 35, 1], [4, 20, 1],
+    //    [20, 22, 1], [4, 33, 1, "macaque"], [33, 34, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1, "macaque"], [17, 18, 1], [18, 19, 1]];
 
     //test-2 (Extension of GA sheet in google drive)
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 3, 1], [1, 15, 1], [15, 16, 1],
-    //    [15, 11, 1], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1], [14, 8, 1], [5, 25, 1], [25, 24, 1],
-    //    [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1], [4, 35, 1], [4, 20, 1], [20, 22, 1], [4, 33, 1], [33, 34, 1],
-    //    [4, 5, 1], [5, 6, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1], [17, 18, 1], [18, 19, 1]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1, "macaque"], [1, 3, 1], [1, 15, 1], [15, 16, 1],
+    //    [15, 11, 1, "macaque"], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1, "macaque"], [13, 14, 1], [14, 8, 1], [5, 25, 1],
+    // [25, 24, 1, "macaque"], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1, "macaque"], [4, 35, 1], [4, 20, 1], [20, 22, 1],
+    // [4, 33, 1, "macaque"], [33, 34, 1], [4, 5, 1], [5, 6, 1], [3, 10, 1, "macaque"], [10, 21, 1], [10, 17, 1], [17, 18, 1],
+    // [18, 19, 1, "macaque"]];
 
     //test-3 (Extension of GA sheet in google drive)
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1], [2, 29, 1], [2, 3, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1], [1, 15, 1],
-    //    [15, 16, 1], [15, 11, 1], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1], [14, 8, 1],
-    //    [5, 25, 1], [25, 24, 1], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1], [4, 35, 1],
-    //    [4, 20, 1], [20, 22, 1], [4, 33, 1], [33, 34, 1], [4, 5, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1],
-    //    [17, 18, 1], [18, 19, 1]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 3, 1], [2, 31, 1], [31, 32, 1, "macaque"], [1, 30, 1], [1, 15, 1],
+    //    [15, 16, 1], [15, 11, 1, "macaque"], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1, "macaque"], [13, 14, 1], [14, 8, 1],
+    //    [5, 25, 1], [25, 24, 1, "macaque"], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1, "macaque"], [3, 4, 1], [4, 35, 1],
+    //    [4, 20, 1], [20, 22, 1, "macaque"], [4, 33, 1], [33, 34, 1], [4, 5, 1], [3, 10, 1, "macaque"], [10, 21, 1], [10, 17, 1],
+    //    [17, 18, 1], [18, 19, 1, "macaque"]];
 
     //test-4 (GA example for 50 nodes)
 
@@ -685,7 +709,6 @@ var SMT = function () {
      * Type - Real Number
      */
 
-    //working version of all examples for iterations: 50 and size: 100
     var config = {
         "iterations": 100
         , "size": 250
@@ -696,8 +719,17 @@ var SMT = function () {
         , "fittestAlwaysSurvives": true
     };
 
-    // ***************** START ******************* //
-
+    /*
+     * Find the edge list from our chromosomes, which are prepared
+     * from the paths generated from RequiredNodeList using Graph.js
+     * Each path represents a chromosome. See example below.
+     * RequiredNodeList = [1, 2, 3, 4, 5, 6]
+     * [[1,2,21],
+     * [1,111,7],[111,112,7],[112,2,7],
+     * [1,13,1],[13,27,5],[27,26,7],[26,12,2],[12,2,5],
+     * [3,7,5],[7,6,1],
+     * [4,17,2],[17,5,5]]
+     */
     var EdgeList = [];
     var RequiredNodeList = [1, 2, 3, 4, 5, 6];
 
@@ -707,6 +739,9 @@ var SMT = function () {
         //var edges = this.userData["edges"];
         var chromosomes = [];
 
+        /*
+         * Populating edges including reverse edges
+         */
         for (var i = 0; i < edges.length; i++) {
             graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
             graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
@@ -739,48 +774,25 @@ var SMT = function () {
             //console.log("myEdges: ", myEdges);
             while (myEdges.length != 0)
                 EdgeList.push(myEdges.shift());
-
-            var chromosome = new Array(edges.length + 1).join('0').split('').map(parseFloat);
-            for (var i = 0; i < myEdges.length; i++) {
-                for (var j = 0; j < edges.length; j++) {
-                    if ((myEdges[i][0] == edges[j][0] && myEdges[i][1] == edges[j][1]) || (myEdges[i][1] == edges[j][0] && myEdges[i][0] == edges[j][1])) {
-                        chromosome[j] = 1;
-                    }
-                }
-            }
-
-            //console.log("Chromosome: ", chromosome);
-
-            //single chromosome for each path
-            return chromosome;
         }
-
-        //console.log(chromosomes.length, chromosomes);
-
-        //console.log("EdgeList: ", EdgeList);
-        //for (var i = 0; i < EdgeList.length; i++) {
-        //    console.log(EdgeList[i]);
-        //}
-
-        //set of chromosomes for all paths
-        //return chromosomes;
 
         return EdgeList;
     }
 
     EdgeList = ConnectedPaths();
-    console.log("userData", EdgeList);
+
+    /*
+     * adding weight of edges in EdgeList from the original dataset
+     */
     for (var i = 0; i < EdgeList.length; i++) {
         for (var j = 0; j < edges.length; j++) {
             if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1]))
                 EdgeList[i][2] = edges[j][2];
         }
     }
-    console.log("userData after edge", EdgeList);
 
-    // ***************** END ********************* //
     /*
-     * Initial data to feed in GA
+     * Initial GA input
      */
     var userData = {
         "nodes": nodes,
@@ -789,13 +801,20 @@ var SMT = function () {
 
     /*
      * GA starts beyond this point
+     * measure execution time
      */
     var start = new Date().getTime();
 
     genetic.evolve(config, userData);
 
     var end = new Date().getTime();
+
+    /*
+     * Measure only execuation time of GA. Skip execution
+     * of Draw function from genetic.notification. Fix this!!
+     */
     console.log("Execution Time: ", end - start);
+
     d3.select("#svgVisualize").append("text")
         .attr("stroke", "black")
         .attr("x", 10)
