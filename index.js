@@ -2,6 +2,9 @@
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
  */
+
+var TempList = [];
+
 var SMT = function () {
     //var previousfitness = 0;
     //var fitnessunchanged = 0;
@@ -14,7 +17,6 @@ var SMT = function () {
 
     genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
     genetic.EdgeList = [];
-
 
     /*
      * Find chromosomes from the paths generated from RequiredNodeList
@@ -37,6 +39,17 @@ var SMT = function () {
             graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
         }
 
+        for (var i = 0; i < this.RequiredNodeList.length; i++) {
+            if (!(graph.hasVertex(this.RequiredNodeList[i]))) {
+                TempList = TempList.concat(this.RequiredNodeList[i]);
+                this.RequiredNodeList.splice(i, 1);
+                i--;
+            }
+        }
+
+        console.log(TempList);
+        console.log(this.RequiredNodeList);
+
         genetic.chromos = function (path) {
             var myEdges = [];
             for (var i = 0; i < path.length; i++) {
@@ -49,7 +62,7 @@ var SMT = function () {
                     myEdges.push(path[i]);
             }
 
-            console.log("myEdges: ", myEdges);
+            console.log("Starting myEdges: ", myEdges);
             for (var i = 0; i < myEdges.length; i++)
                 this.EdgeList.push(myEdges[i]);
 
@@ -609,30 +622,37 @@ var SMT = function () {
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1, "macaque"], [1, 15, 1], [15, 16, 1],
-    //    [15, 11, 1], [11, 12, 1, "macaque"], [12, 9, 1], [12, 13, 1], [13, 7, 1], [13, 14, 1, "macaque"], [14, 8, 1], [5, 25, 1],
-    //    [25, 24, 1], [5, 26, 1, "macaque"], [6, 28, 1], [6, 23, 1], [23, 27, 1], [3, 4, 1, "macaque"], [4, 35, 1], [4, 20, 1],
-    //    [20, 22, 1], [4, 33, 1, "macaque"], [33, 34, 1], [3, 10, 1], [10, 21, 1], [10, 17, 1, "macaque"], [17, 18, 1], [18, 19, 1]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
+    //    [1, 15, 1, "Birds"], [15, 16, 1, "Rat"], [15, 11, 1, "Homo sapiens"], [11, 12, 1, "macaque"], [12, 9, 1, "Birds"],
+    //    [12, 13, 1, "Rat"], [13, 7, 1, "Homo sapiens"], [13, 14, 1, "macaque"], [14, 8, 1, "Birds"], [5, 25, 1, "Homo sapiens"],
+    //    [25, 24, 1, "Homo sapiens"], [5, 26, 1, "macaque"], [6, 28, 1, "Birds"], [6, 23, 1, "Rat"], [23, 27, 1, "Homo sapiens"],
+    //    [3, 4, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Homo sapiens"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
+    //    [33, 34, 1, "Birds"], [3, 10, 1, "Rat"], [10, 21, 1, "Homo sapiens"], [10, 17, 1, "macaque"], [17, 18, 1, "Birds"],
+    //    [18, 19, 1, "Rat"]];
 
     //test-2 (Extension of GA sheet in google drive)
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 31, 1], [31, 32, 1], [1, 30, 1, "macaque"], [1, 3, 1], [1, 15, 1], [15, 16, 1],
-    //    [15, 11, 1, "macaque"], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1, "macaque"], [13, 14, 1], [14, 8, 1], [5, 25, 1],
-    // [25, 24, 1, "macaque"], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1, "macaque"], [4, 35, 1], [4, 20, 1], [20, 22, 1],
-    // [4, 33, 1, "macaque"], [33, 34, 1], [4, 5, 1], [5, 6, 1], [3, 10, 1, "macaque"], [10, 21, 1], [10, 17, 1], [17, 18, 1],
-    // [18, 19, 1, "macaque"]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
+    //    [1, 3, 1, "Birds"], [1, 15, 1, "Rat"], [15, 16, 1, "Homo sapiens"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
+    //    [12, 9, 1, "Rat"], [12, 13, 1, "Homo sapiens"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Rat"],
+    //    [5, 25, 1, "Homo sapiens"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Rat"], [6, 23, 1, "Homo sapiens"],
+    //    [23, 27, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Rat"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
+    //    [33, 34, 1, "Birds"], [4, 5, 1, "Rat"], [5, 6, 1, "Homo sapiens"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
+    //    [10, 17, 1, "Rat"], [17, 18, 1, "Homo sapiens"], [18, 19, 1, "macaque"]];
 
     //test-3 (Extension of GA sheet in google drive)
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1], [2, 3, 1], [2, 31, 1], [31, 32, 1, "macaque"], [1, 30, 1], [1, 15, 1],
-    //    [15, 16, 1], [15, 11, 1, "macaque"], [11, 12, 1], [12, 9, 1], [12, 13, 1], [13, 7, 1, "macaque"], [13, 14, 1], [14, 8, 1],
-    //    [5, 25, 1], [25, 24, 1, "macaque"], [5, 26, 1], [6, 28, 1], [6, 23, 1], [23, 27, 1, "macaque"], [3, 4, 1], [4, 35, 1],
-    //    [4, 20, 1], [20, 22, 1, "macaque"], [4, 33, 1], [33, 34, 1], [4, 5, 1], [3, 10, 1, "macaque"], [10, 21, 1], [10, 17, 1],
-    //    [17, 18, 1], [18, 19, 1, "macaque"]];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 3, 1, "Rat"], [2, 31, 1, "Homo sapiens"], [31, 32, 1, "macaque"],
+    //    [1, 30, 1, "Birds"], [1, 15, 1, "Homo sapiens"], [15, 16, 1, "Rat"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
+    //    [12, 9, 1, "Homo sapiens"], [12, 13, 1, "Rat"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Homo sapiens"],
+    //    [5, 25, 1, "Rat"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Homo sapiens"], [6, 23, 1, "Rat"],
+    //    [23, 27, 1, "macaque"], [3, 4, 1, "Birds"], [4, 35, 1, "Homo sapiens"], [4, 20, 1, "Rat"], [20, 22, 1, "macaque"],
+    //    [4, 33, 1, "Birds"], [33, 34, 1, "Homo sapiens"], [4, 5, 1, "Rat"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
+    //    [10, 17, 1, "Homo sapiens"], [17, 18, 1, "Rat"], [18, 19, 1, "macaque"]];
 
     //test-4 (GA example for 50 nodes)
 
@@ -649,6 +669,7 @@ var SMT = function () {
     //    [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
 
     //Test-5 between SMT and GA-SMT
+
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
     var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
@@ -762,7 +783,7 @@ var SMT = function () {
         function chromos(path) {
             var myEdges = [];
             for (var i = 0; i < path.length; i++) {
-                if (path[i].length > 2) {
+                if (path[i].length >= 2) {
                     for (var j = 0; j < path[i].length - 1;) {
                         myEdges.push([path[i][j], path[i][++j]]);
                     }
@@ -774,6 +795,8 @@ var SMT = function () {
             //console.log("myEdges: ", myEdges);
             while (myEdges.length != 0)
                 EdgeList.push(myEdges.shift());
+
+            console.log(myEdges);
         }
 
         return EdgeList;
@@ -791,6 +814,7 @@ var SMT = function () {
         }
     }
 
+    console.log("Only edges: ", EdgeList);
     /*
      * Initial GA input
      */
