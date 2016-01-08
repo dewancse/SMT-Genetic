@@ -1,4 +1,8 @@
 /**
+ * Created by dsar941 on 1/8/2016.
+ */
+
+/**
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
  */
@@ -13,7 +17,13 @@ var SMT = function () {
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
 
-    genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
+    genetic.RequiredNodeList = [
+        "transitional sensory area",
+        //"supplementary sensory area",
+        "ventroposterior superior nucleus thalami",
+        "receptive field for the foot in area5",
+        "globus pallidus internal part"
+    ];
     genetic.EdgeList = [];
 
     /*
@@ -122,6 +132,7 @@ var SMT = function () {
             this.ourchromosomes = this.ConnectedPaths();
             this.len = this.ourchromosomes.length;
 
+            console.log(this.ourchromosomes);
             /*
              * mixchromosomes is the combination of our chromosomes, so all is 1
              */
@@ -410,6 +421,9 @@ var SMT = function () {
 
             console.log("isFinished result: ", result);
 
+            for (var i = 0; i < result.length; i++)
+                console.log(result[i]);
+
             //d3.select("svg").remove();
             //d3.select("#svgVisualize").selectAll("svg").remove();
             this.draw(result);
@@ -561,242 +575,90 @@ var SMT = function () {
         }
     }
 
-    //test-1 (Extension of GA sheet in google drive)
+    var nodes = [];
+    var edges = [];
 
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35];
-    var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
-        [1, 15, 1, "Birds"], [15, 16, 1, "Rat"], [15, 11, 1, "Homo sapiens"], [11, 12, 1, "macaque"], [12, 9, 1, "Birds"],
-        [12, 13, 1, "Rat"], [13, 7, 1, "Homo sapiens"], [13, 14, 1, "macaque"], [14, 8, 1, "Birds"], [5, 25, 1, "Homo sapiens"],
-        [25, 24, 1, "Homo sapiens"], [5, 26, 1, "macaque"], [6, 28, 1, "Birds"], [6, 23, 1, "Rat"], [23, 27, 1, "Homo sapiens"],
-        [3, 4, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Homo sapiens"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
-        [33, 34, 1, "Birds"], [3, 10, 1, "Rat"], [10, 21, 1, "Homo sapiens"], [10, 17, 1, "macaque"], [17, 18, 1, "Birds"],
-        [18, 19, 1, "Rat"]];
+    d3.json("data2.json", function (data) {
 
-    //test-2 (Extension of GA sheet in google drive)
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
-    //    [1, 3, 1, "Birds"], [1, 15, 1, "Rat"], [15, 16, 1, "Homo sapiens"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
-    //    [12, 9, 1, "Rat"], [12, 13, 1, "Homo sapiens"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Rat"],
-    //    [5, 25, 1, "Homo sapiens"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Rat"], [6, 23, 1, "Homo sapiens"],
-    //    [23, 27, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Rat"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
-    //    [33, 34, 1, "Birds"], [4, 5, 1, "Rat"], [5, 6, 1, "Homo sapiens"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
-    //    [10, 17, 1, "Rat"], [17, 18, 1, "Homo sapiens"], [18, 19, 1, "macaque"]];
-
-    //test-3 (Extension of GA sheet in google drive)
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 3, 1, "Rat"], [2, 31, 1, "Homo sapiens"], [31, 32, 1, "macaque"],
-    //    [1, 30, 1, "Birds"], [1, 15, 1, "Homo sapiens"], [15, 16, 1, "Rat"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
-    //    [12, 9, 1, "Homo sapiens"], [12, 13, 1, "Rat"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Homo sapiens"],
-    //    [5, 25, 1, "Rat"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Homo sapiens"], [6, 23, 1, "Rat"],
-    //    [23, 27, 1, "macaque"], [3, 4, 1, "Birds"], [4, 35, 1, "Homo sapiens"], [4, 20, 1, "Rat"], [20, 22, 1, "macaque"],
-    //    [4, 33, 1, "Birds"], [33, 34, 1, "Homo sapiens"], [4, 5, 1, "Rat"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
-    //    [10, 17, 1, "Homo sapiens"], [17, 18, 1, "Rat"], [18, 19, 1, "macaque"]];
-
-    //test-4 (GA example for 50 nodes)
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"],
-    //    [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"],
-    //    [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"],
-    //    [40, 45, 5, "Rat"], [40, 46, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"],
-    //    [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"],
-    //    [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-    //    [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
-
-    //Test-5 between SMT and GA-SMT
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
-    //    [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
-    //    [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
-    //    [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
-    //    [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
-    //    [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-    //    [20, 21, 7, "Birds"]];
-
-    //test-5 (Getting nodes and edges from data.json)
-
-    //var nodes = [];
-    //var edges = [];
-    //
-    //d3.json("data.json", function (data) {
-    //
-    //    for (var i = 0; i < data["nodes"].length; i++) {
-    //        nodes[i] = data["nodes"][i];
-    //    }
-    //
-    //    for (var j = 0; j < data["edges"].length; j++) {
-    //        edges.push([]);
-    //        edges[j].push(new Array(4));
-    //        for (var k = 0; k < 4; k++) {
-    //            if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
-    //                edges[j][3] = "macaque";
-    //            }
-    //            else if (data["edges"][j][3] == "rattus norvegicus") {
-    //                edges[j][3] = "Rat";
-    //            }
-    //            else {
-    //                edges[j][k] = data["edges"][j][k];
-    //            }
-    //        }
-    //    }
-
-    //test-6 (GA sheet in google drive)
-
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [3, 4, 1], [5, 6, 1], [1, 3, 1]];
-    //var edges = [[1, 2, 1], [1, 3, 1], [4, 5, 1], [5, 6, 1]];
-    //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
-
-    /*Configuration parameters
-     * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
-     * @size: Population size, Default - 250, Type - Real Number
-     * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
-     * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
-     * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
-     * Default - 0, Type - Real Number
-     *
-     * (WE MAY USE THESE IN FUTURE)
-     * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
-     * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
-     * Type - Real Number
-     */
-
-    var config = {
-        "iterations": 100
-        , "size": 250
-        , "crossover": 0.9
-        , "mutation": 0.2
-        , "skip": 0
-        , "webWorkers": false
-        , "fittestAlwaysSurvives": true
-    };
-
-    /*
-     * Find the edge list from our chromosomes, which are prepared
-     * from the paths generated from RequiredNodeList using Graph.js
-     * Each path represents a chromosome. See example below.
-     * RequiredNodeList = [1, 2, 3, 4, 5, 6]
-     * [[1,2,21],
-     * [1,111,7],[111,112,7],[112,2,7],
-     * [1,13,1],[13,27,5],[27,26,7],[26,12,2],[12,2,5],
-     * [3,7,5],[7,6,1],
-     * [4,17,2],[17,5,5]]
-     */
-    var EdgeList = [];
-    var RequiredNodeList = [1, 2, 3, 4, 5, 6];
-
-    var ConnectedPaths = function () {
-
-        var graph = new Graph();
-        for (var i = 0; i < edges.length; i++) {
-            graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
-            graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
+        for (var i = 0; i < data["nodes"].length; i++) {
+            nodes[i] = data["nodes"][i];
         }
 
-        var paths = [];
-        for (var i = 0; i < RequiredNodeList.length; i++) {
-            for (var j = i + 1; j < RequiredNodeList.length; j++) {
-                // iterates over all paths between `from` and `to` in the graph
-                for (var it = graph.paths(RequiredNodeList[i], RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
-                    var path = kv.value;
-                    paths.push([path]);
-                    PathToEdges(paths.shift());
+        for (var j = 0; j < data["edges"].length; j++) {
+            edges.push([]);
+            edges[j].push(new Array(4));
+            for (var k = 0; k < 4; k++) {
+                if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+                    edges[j][3] = "macaque";
+                }
+                else if (data["edges"][j][3] == "rattus norvegicus") {
+                    edges[j][3] = "Rat";
+                }
+                else {
+                    edges[j][k] = data["edges"][j][k];
                 }
             }
         }
 
-        function PathToEdges(path) {
-            var myEdges = [];
-            for (var i = 0; i < path.length; i++) {
-                if (path[i].length > 2) {
-                    for (var j = 0; j < path[i].length - 1;) {
-                        myEdges.push([path[i][j], path[i][++j]]);
-                    }
-                }
-                else
-                    myEdges.push(path[i]);
-            }
+        console.log(nodes);
+        console.log("Length: ", edges.length);
+        for (var i = 0; i < edges.length; i++)
+            console.log(edges[i]);
 
-            //console.log("myEdges: ", myEdges);
-            while (myEdges.length != 0)
-                EdgeList.push(myEdges.shift());
+        /*Configuration parameters
+         * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
+         * @size: Population size, Default - 250, Type - Real Number
+         * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
+         * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
+         * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
+         * Default - 0, Type - Real Number
+         *
+         * (WE MAY USE THESE IN FUTURE)
+         * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
+         * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
+         * Type - Real Number
+         */
 
-        }
+        var config = {
+            "iterations": 100
+            , "size": 250
+            , "crossover": 0.9
+            , "mutation": 0.2
+            , "skip": 0
+            , "webWorkers": false
+            , "fittestAlwaysSurvives": true
+        };
+
 
         /*
-         * Utility function for removing non-unique edges from our solution
+         * Initial GA input
          */
-        function uniqueify(es) {
-            var retval = [];
-            es.forEach(function (e) {
-                for (var j = 0; j < retval.length; j++) {
-                    if (retval[j][0] === e[0] && retval[j][1] === e[1])
-                        return;
-                }
-                retval.push(e);
-            });
-            return retval;
-        }
+        var userData = {
+            "nodes": nodes,
+            "edges": edges
+        };
 
-        return uniqueify(EdgeList);
-    }
+        /*
+         * GA starts beyond this point
+         * measure execution time
+         */
+        var start = new Date().getTime();
 
-    EdgeList = ConnectedPaths();
+        genetic.evolve(config, userData);
 
-    /*
-     * adding weight and species from the original dataset into our EdgeList
-     */
-    for (var i = 0; i < EdgeList.length; i++) {
-        for (var j = 0; j < edges.length; j++) {
-            if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1])) {
-                EdgeList[i][2] = edges[j][2];
-                EdgeList[i][3] = edges[j][3];
-            }
-        }
-    }
+        var end = new Date().getTime();
 
-    console.log("EdgeList: ", EdgeList);
-    /*
-     * Initial GA input
-     */
-    var userData = {
-        "nodes": nodes,
-        "edges": EdgeList
-    };
+        /*
+         * Only measure execution time of GA. Skip execution
+         * of Draw function from genetic.notification. Fix this!!
+         */
+        console.log("Execution Time: ", end - start);
 
-    /*
-     * GA starts beyond this point
-     * measure execution time
-     */
-    var start = new Date().getTime();
-
-    genetic.evolve(config, userData);
-
-    var end = new Date().getTime();
-
-    /*
-     * Only measure execution time of GA. Skip execution
-     * of Draw function from genetic.notification. Fix this!!
-     */
-    console.log("Execution Time: ", end - start);
-
-    //d3.select("#svgVisualize").append("text")
-    //    .attr("stroke", "black")
-    //    .attr("x", 10)
-    //    .attr("y", 110)
-    //    .style("font", "14px sans-serif")
-    //    .text(end - start + " milliseconds");
-    //});
+        //d3.select("#svgVisualize").append("text")
+        //    .attr("stroke", "black")
+        //    .attr("x", 10)
+        //    .attr("y", 110)
+        //    .style("font", "14px sans-serif")
+        //    .text(end - start + " milliseconds");
+    });
 }();
