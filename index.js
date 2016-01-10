@@ -563,15 +563,15 @@ var SMT = function () {
 
     //test-1 (Extension of GA sheet in google drive)
 
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35];
-    var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
-        [1, 15, 1, "Birds"], [15, 16, 1, "Rat"], [15, 11, 1, "Homo sapiens"], [11, 12, 1, "macaque"], [12, 9, 1, "Birds"],
-        [12, 13, 1, "Rat"], [13, 7, 1, "Homo sapiens"], [13, 14, 1, "macaque"], [14, 8, 1, "Birds"], [5, 25, 1, "Homo sapiens"],
-        [25, 24, 1, "Homo sapiens"], [5, 26, 1, "macaque"], [6, 28, 1, "Birds"], [6, 23, 1, "Rat"], [23, 27, 1, "Homo sapiens"],
-        [3, 4, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Homo sapiens"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
-        [33, 34, 1, "Birds"], [3, 10, 1, "Rat"], [10, 21, 1, "Homo sapiens"], [10, 17, 1, "macaque"], [17, 18, 1, "Birds"],
-        [18, 19, 1, "Rat"]];
+    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    //    30, 31, 32, 33, 34, 35];
+    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
+    //    [1, 15, 1, "Birds"], [15, 16, 1, "Rat"], [15, 11, 1, "Homo sapiens"], [11, 12, 1, "macaque"], [12, 9, 1, "Birds"],
+    //    [12, 13, 1, "Rat"], [13, 7, 1, "Homo sapiens"], [13, 14, 1, "macaque"], [14, 8, 1, "Birds"], [5, 25, 1, "Homo sapiens"],
+    //    [25, 24, 1, "Homo sapiens"], [5, 26, 1, "macaque"], [6, 28, 1, "Birds"], [6, 23, 1, "Rat"], [23, 27, 1, "Homo sapiens"],
+    //    [3, 4, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Homo sapiens"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
+    //    [33, 34, 1, "Birds"], [3, 10, 1, "Rat"], [10, 21, 1, "Homo sapiens"], [10, 17, 1, "macaque"], [17, 18, 1, "Birds"],
+    //    [18, 19, 1, "Rat"]];
 
     //test-2 (Extension of GA sheet in google drive)
 
@@ -613,17 +613,17 @@ var SMT = function () {
 
     //Test-5 between SMT and GA-SMT
 
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
-    //    [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
-    //    [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
-    //    [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
-    //    [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
-    //    [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-    //    [20, 21, 7, "Birds"]];
+    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
+        [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
+        [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
+        [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+        [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
+        [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
+        [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
+        [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
+        [20, 21, 7, "Birds"]];
 
     //test-5 (Getting nodes and edges from data.json)
 
