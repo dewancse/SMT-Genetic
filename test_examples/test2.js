@@ -5,6 +5,10 @@
 /**
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
+ *
+ * This version uses shortest path using "bidirectionalShortestPath" function
+ * from each required node.
+ * Library used: http://felix-kling.de/JSNetworkX/getting_started.html
  */
 
 var TempList = [];

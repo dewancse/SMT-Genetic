@@ -4,6 +4,14 @@
  */
 
 var TempList = [];
+var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+//var RequiredNodeList = [
+//    "transitional sensory area",
+//    "supplementary sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+//];
 
 var SMT = function () {
 
@@ -13,7 +21,6 @@ var SMT = function () {
     genetic.select1 = Genetic.Select1.Tournament2;
     genetic.select2 = Genetic.Select2.Tournament2;
 
-    genetic.RequiredNodeList = [1, 2, 3, 4, 5, 6];
     genetic.EdgeList = [];
 
     /*
@@ -36,17 +43,6 @@ var SMT = function () {
             graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
             graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
         }
-
-        for (var i = 0; i < this.RequiredNodeList.length; i++) {
-            if (!(graph.hasVertex(this.RequiredNodeList[i]))) {
-                TempList = TempList.concat(this.RequiredNodeList[i]);
-                this.RequiredNodeList.splice(i, 1);
-                i--;
-            }
-        }
-
-        console.log("TempList: ", TempList);
-        console.log("RequiredNodeList: ", this.RequiredNodeList);
 
         genetic.chromos = function (path) {
             var myEdges = [];
@@ -78,10 +74,10 @@ var SMT = function () {
         }
 
         var paths = [];
-        for (var i = 0; i < this.RequiredNodeList.length; i++) {
-            for (var j = i + 1; j < this.RequiredNodeList.length; j++) {
+        for (var i = 0; i < RequiredNodeList.length; i++) {
+            for (var j = i + 1; j < RequiredNodeList.length; j++) {
                 // iterates over all paths between `from` and `to` in the graph
-                for (var it = graph.paths(this.RequiredNodeList[i], this.RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
+                for (var it = graph.paths(RequiredNodeList[i], RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
                     var path = kv.value;
                     paths.push([path]);
                     chromosomes.push(this.chromos(paths.shift()));
@@ -255,21 +251,21 @@ var SMT = function () {
             graph.createEdge(GAEdges[i][1], GAEdges[i][0], GAEdges[i][2]);
         }
 
-        var DisconnectedValuesList = new Array(this.RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
+        var DisconnectedValuesList = new Array(RequiredNodeList.length + 1).join('0').split('').map(parseFloat);
 
         var SearchList = [];
         var FoundList = [];
         var AttemptedList = [];
-        for (var i = 0; i < this.RequiredNodeList.length; i++)
+        for (var i = 0; i < RequiredNodeList.length; i++)
             AttemptedList[i] = false;
 
-        var MaxDisconnected = this.RequiredNodeList.length - 1;
+        var MaxDisconnected = RequiredNodeList.length - 1;
 
         /*
          * Assign RequiredList values to SearchList
          */
-        for (var i = 0; i < this.RequiredNodeList.length; i++)
-            SearchList[i] = this.RequiredNodeList[i];
+        for (var i = 0; i < RequiredNodeList.length; i++)
+            SearchList[i] = RequiredNodeList[i];
 
         /*
          * For All SearchList[i] Not in Graph, assign MaxDisconnected
@@ -315,9 +311,9 @@ var SMT = function () {
              * Populate DisconnectedValuesList corresponding
              * positions for nodes in SourceList and FoundList
              */
-            DisconnectedValuesList[i] = this.RequiredNodeList.length - FoundList.length;
+            DisconnectedValuesList[i] = RequiredNodeList.length - FoundList.length;
             for (var m = 0; m < FoundList.length; m++) {
-                DisconnectedValuesList[FoundList[m]] = this.RequiredNodeList.length - FoundList.length;
+                DisconnectedValuesList[FoundList[m]] = RequiredNodeList.length - FoundList.length;
             }
 
             FoundList = [];
@@ -561,6 +557,121 @@ var SMT = function () {
         }
     }
 
+    /*
+     * Preprocess longest weight from SAM's algorithm
+     */
+
+    //test-1
+    //var outputSMT = [[1, 2, 1], [3, 4, 1]];
+
+    //test-2
+    //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
+
+    //test-3
+    //var outputSMT = [[1,2,1],[3,4,1],[5,4,1],[2,3,1]];
+
+    //test-4
+    var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7]];
+
+    //test-5.1
+    //var outputSMT = [["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]];
+
+    //test-5.2 commented "supplementary sensory area" in RequiredNodeList
+    //var outputSMT = [["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["medial superior temporal area", "area 23c", 2, "macaque"],
+    //    ["area 23c", "supplementary motor area", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "supplementary motor area", 2, "macaque"]];
+
+    var LongestWeight;
+    var FindMaxPathEdges = function () {
+
+        var graphSMT = new Graph();
+
+        for (var i = 0; i < outputSMT.length; i++) {
+            graphSMT.createEdge(outputSMT[i][0], outputSMT[i][1], outputSMT[i][2]);
+            graphSMT.createEdge(outputSMT[i][1], outputSMT[i][0], outputSMT[i][2]);
+        }
+
+        //Move the required nodes TempList that are not in the graph
+        for (var i = 0; i < RequiredNodeList.length; i++) {
+            if (!(graphSMT.hasVertex(RequiredNodeList[i]))) {
+                TempList = TempList.concat(RequiredNodeList[i]);
+                RequiredNodeList.splice(i, 1);
+                i--;
+            }
+        }
+
+        var result, paths = [];
+        var MaxEdge = 0;
+        for (var i = 0; i < RequiredNodeList.length; i++) {
+            for (var j = i + 1; j < RequiredNodeList.length; j++) {
+                // iterates over all paths between `from` and `to` in the graph
+                for (var it = graphSMT.paths(RequiredNodeList[i], RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
+                    var path = kv.value;
+                    paths.push([path]);
+                    result = PathToMaxEdges(paths.shift());
+                    if (result > MaxEdge)
+                        MaxEdge = result;
+                }
+            }
+        }
+
+        //Split path into edges
+        function PathToMaxEdges(path) {
+            var myEdges = [];
+            for (var i = 0; i < path.length; i++) {
+                if (path[i].length > 2) {
+                    for (var j = 0; j < path[i].length - 1;) {
+                        myEdges.push([path[i][j], path[i][++j]]);
+                    }
+                }
+                else
+                    myEdges.push(path[i]);
+            }
+
+            console.log("myEdges: ", myEdges);
+            //adding weight in each edge
+            for (var i = 0; i < myEdges.length; i++) {
+                for (var j = 0; j < outputSMT.length; j++) {
+                    if ((myEdges[i][0] == outputSMT[j][0] && myEdges[i][1] == outputSMT[j][1]) || (myEdges[i][1] == outputSMT[j][0] && myEdges[i][0] == outputSMT[j][1])) {
+                        myEdges[i][2] = outputSMT[j][2];
+                    }
+                }
+            }
+
+            //Sum of edges in current path
+            var sum = 0;
+            for (var i = 0; i < myEdges.length; i++)
+                sum = sum + myEdges[i][2];
+
+            return sum;
+        }
+
+        return MaxEdge;
+    }
+
+    LongestWeight = FindMaxPathEdges();
+    console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+
+    /*
+     * Test cases
+     * */
+
     //test-1 (Extension of GA sheet in google drive)
 
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -597,21 +708,7 @@ var SMT = function () {
     //    [4, 33, 1, "Birds"], [33, 34, 1, "Homo sapiens"], [4, 5, 1, "Rat"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
     //    [10, 17, 1, "Homo sapiens"], [17, 18, 1, "Rat"], [18, 19, 1, "macaque"]];
 
-    //test-4 (GA example for 50 nodes)
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 14, 2, "macaque"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [15, 14, 1, "Homo sapiens"], [1, 13, 1, "Homo sapiens"],
-    //    [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"], [12, 11, 7, "Birds"],
-    //    [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"],
-    //    [40, 45, 5, "Rat"], [40, 46, 7, "Birds"], [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [41, 42, 7, "Birds"],
-    //    [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"], [30, 34, 2, "macaque"], [34, 35, 5, "Rat"],
-    //    [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-    //    [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [19, 20, 5, "Rat"], [20, 21, 7, "Birds"]];
-
-    //Test-5 between SMT and GA-SMT
+    //Test-4 between SMT and GA-SMT
 
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
@@ -652,14 +749,8 @@ var SMT = function () {
     //        }
     //    }
 
-    //test-6 (GA sheet in google drive)
-
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [3, 4, 1], [5, 6, 1], [1, 3, 1]];
-    //var edges = [[1, 2, 1], [1, 3, 1], [4, 5, 1], [5, 6, 1]];
-    //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
-
-    /*Configuration parameters
+    /*
+     * Configuration parameters
      * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
      * @size: Population size, Default - 250, Type - Real Number
      * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
@@ -683,10 +774,69 @@ var SMT = function () {
         , "fittestAlwaysSurvives": true
     };
 
+    var graphDFS = new Graph();
+
+    for (var i = 0; i < outputSMT.length; i++) {
+        graphDFS.createEdge(outputSMT[i][0], outputSMT[i][1], outputSMT[i][2], outputSMT[i][3]);
+        graphDFS.createEdge(outputSMT[i][1], outputSMT[i][0], outputSMT[i][2], outputSMT[i][3]);
+    }
+
+    console.log("Before DFS: ", graphDFS);
+
     /*
-     * Find the edge list from our chromosomes, which are prepared
-     * from the paths generated from RequiredNodeList using Graph.js
-     * Each path represents a chromosome. See example below.
+     * DFS Implementation to traverse from all required nodes
+     */
+    var dfs = function (start, graph, LongestWeight) {
+        var from, stack = [];
+        var visited = [];
+        var EdgeList = [];
+        var NodeList = [];
+        var PathWeightsToNode = [];
+
+        PathWeightsToNode[start] = 0;
+        stack.push(start);
+        while (stack.length > 0) {
+            from = stack.pop();
+
+            if (!visited[from]) {
+                visited[from] = true;
+
+                NodeList.push(from);
+
+                // iterates over all outgoing vertices of the `from` vertex
+                for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+                    var to = kv.value[0],
+                        vertexValue = kv.value[1],
+                        edgeValue = kv.value[2];
+
+                    if (!visited[to]) {
+                        if (PathWeightsToNode[from] + edgeValue <= LongestWeight) {
+                            stack.push(to);
+                            EdgeList.push([from, to, edgeValue]);
+                            PathWeightsToNode[to] = PathWeightsToNode[from] + edgeValue;
+                            //console.log("Test: ", from, to, edgeValue, PathWeightsToNode[from], PathWeightsToNode[to]);
+                        }
+                    }
+                }
+            }
+        }
+        //console.log("NodeList: ", NodeList);
+        return EdgeList;
+    }
+
+    var FinalEdges = [];
+    for (var i = 0; i < RequiredNodeList.length; i++) {
+        FinalEdges = FinalEdges.concat(dfs(RequiredNodeList[i], graphDFS, LongestWeight));
+    }
+
+    //console.log("FinalEdges: ", FinalEdges);
+    for (var i = 0; i < FinalEdges.length; i++)
+        console.log("FinalEdges: ", FinalEdges[i]);
+
+    /*
+     * Make a Graph using FinalEdges from DFS.
+     * Find the edge list from the paths generated from RequiredNodeList
+     * using Graph.js Each path will represent a chromosome. See example below.
      * RequiredNodeList = [1, 2, 3, 4, 5, 6]
      * [[1,2,21],
      * [1,111,7],[111,112,7],[112,2,7],
@@ -695,15 +845,18 @@ var SMT = function () {
      * [4,17,2],[17,5,5]]
      */
     var EdgeList = [];
-    var RequiredNodeList = [1, 2, 3, 4, 5, 6];
 
-    var ConnectedPaths = function () {
+    var FindEdgeList = function () {
 
         var graph = new Graph();
-        for (var i = 0; i < edges.length; i++) {
-            graph.createEdge(edges[i][0], edges[i][1], edges[i][2]);
-            graph.createEdge(edges[i][1], edges[i][0], edges[i][2]);
+
+        //FinalEdges come from DFS search
+        for (var i = 0; i < FinalEdges.length; i++) {
+            graph.createEdge(FinalEdges[i][0], FinalEdges[i][1], FinalEdges[i][2]);
+            graph.createEdge(FinalEdges[i][1], FinalEdges[i][0], FinalEdges[i][2]);
         }
+
+        console.log("Inside FindEdgeList: ", graph);
 
         var paths = [];
         for (var i = 0; i < RequiredNodeList.length; i++) {
@@ -715,6 +868,8 @@ var SMT = function () {
                     PathToEdges(paths.shift());
                 }
             }
+
+            console.log("End of Paths: ", paths);
         }
 
         function PathToEdges(path) {
@@ -733,6 +888,7 @@ var SMT = function () {
             while (myEdges.length != 0)
                 EdgeList.push(myEdges.shift());
 
+            console.log("End of PathToEdges: ", EdgeList);
         }
 
         /*
@@ -750,11 +906,12 @@ var SMT = function () {
             return retval;
         }
 
+        console.log("After uniqueify");
         return uniqueify(EdgeList);
     }
 
-    EdgeList = ConnectedPaths();
-
+    EdgeList = FindEdgeList();
+    console.log("EdgeList: ", EdgeList);
     /*
      * adding weight and species from the original dataset into our EdgeList
      */
@@ -767,12 +924,12 @@ var SMT = function () {
         }
     }
 
-    console.log("EdgeList: ", EdgeList);
+    console.log("EdgeList with Weight and Species: ", EdgeList);
     /*
      * Initial GA input
      */
     var userData = {
-        "nodes": nodes,
+        //"nodes": nodes,
         "edges": EdgeList
     };
 
@@ -792,11 +949,11 @@ var SMT = function () {
      */
     console.log("Execution Time: ", end - start);
 
-    //d3.select("#svgVisualize").append("text")
-    //    .attr("stroke", "black")
-    //    .attr("x", 10)
-    //    .attr("y", 110)
-    //    .style("font", "14px sans-serif")
-    //    .text(end - start + " milliseconds");
+    d3.select("#svgVisualize").append("text")
+        .attr("stroke", "black")
+        .attr("x", 10)
+        .attr("y", 110)
+        .style("font", "14px sans-serif")
+        .text(end - start + " milliseconds");
     //});
 }();
