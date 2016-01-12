@@ -571,7 +571,12 @@ var SMT = function () {
     //var outputSMT = [[1,2,1],[3,4,1],[5,4,1],[2,3,1]];
 
     //test-4
-    var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7]];
+    //var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7]];
+
+    //test-4 Extension
+    var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7],
+        [14, 1, 2], [15, 14, 1], [39, 15, 7], [16, 39, 1], [4, 16, 7], [10, 3, 7], [23, 10, 2], [25, 23, 1],
+        [11, 25, 2], [12, 11, 7], [2, 12, 5]];
 
     //test-5.1
     //var outputSMT = [["transitional sensory area", "medial superior temporal area", 2, "macaque"],
@@ -710,6 +715,20 @@ var SMT = function () {
 
     //Test-4 between SMT and GA-SMT
 
+    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    //var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
+    //    [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
+    //    [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
+    //    [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+    //    [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
+    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
+    //    [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
+    //    [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
+    //    [20, 21, 7, "Birds"]];
+
+    //Test-4 Extension
+
     var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
     var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
@@ -720,7 +739,10 @@ var SMT = function () {
         [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
         [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
         [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-        [20, 21, 7, "Birds"]];
+        [20, 21, 7, "Birds"],
+        [39, 16, 1, "Homo sapiens"], [45, 48, 1, "Homo sapiens"], [49, 44, 1, "Homo sapiens"], [44, 35, 1, "Homo sapiens"],
+        [34, 31, 1, "Homo sapiens"], [9, 21, 1, "Homo sapiens"], [23, 25, 1, "Homo sapiens"]];
+
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -776,9 +798,9 @@ var SMT = function () {
 
     var graphDFS = new Graph();
 
-    for (var i = 0; i < outputSMT.length; i++) {
-        graphDFS.createEdge(outputSMT[i][0], outputSMT[i][1], outputSMT[i][2], outputSMT[i][3]);
-        graphDFS.createEdge(outputSMT[i][1], outputSMT[i][0], outputSMT[i][2], outputSMT[i][3]);
+    for (var i = 0; i < edges.length; i++) {
+        graphDFS.createEdge(edges[i][0], edges[i][1], edges[i][2], edges[i][3]);
+        graphDFS.createEdge(edges[i][1], edges[i][0], edges[i][2], edges[i][3]);
     }
 
     console.log("Before DFS: ", graphDFS);
@@ -824,6 +846,7 @@ var SMT = function () {
         return EdgeList;
     }
 
+    console.log(RequiredNodeList);
     var FinalEdges = [];
     for (var i = 0; i < RequiredNodeList.length; i++) {
         FinalEdges = FinalEdges.concat(dfs(RequiredNodeList[i], graphDFS, LongestWeight));

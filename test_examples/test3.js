@@ -1,6 +1,19 @@
 /**
  * Created by dsar941 on 1/11/2016.
  */
+
+//var edges = [["1", "2", 10, "Birds"], ["3", "10", 7, "Birds"], ["10", "23", 2, "macaque"], ["1", "14", 2, "macaque"], ["32", "31", 5, "Rat"], ["31", "6", 7, "Birds"],
+//    ["6", "7", 1, "Homo sapiens"], ["14", "28", 5, "Rat"], ["39", "15", 7, "Birds"], ["1", "111", 7, "Birds"], ["15", "14", 1, "Homo sapiens"],
+//    ["37", "41", 2, "macaque"], ["41", "47", 5, "Rat"], ["1", "13", 1, "Homo sapiens"], ["13", "27", 5, "Rat"], ["27", "26", 7, "Birds"],
+//    ["26", "12", 2, "macaque"], ["112", "2", 7, "Birds"], ["12", "2", 5, "Rat"], ["8", "9", 5, "Rat"], ["23", "22", 7, "Birds"], ["22", "21", 2, "macaque"],
+//    ["12", "11", 7, "Birds"], ["11", "25", 2, "macaque"], ["11", "24", 5, "Rat"], ["16", "4", 7, "Birds"], ["4", "17", 2, "macaque"], ["5", "17", 5, "Rat"],
+//    ["17", "18", 7, "Birds"], ["17", "29", 2, "macaque"], ["29", "38", 5, "Rat"], ["29", "37", 7, "Birds"], ["37", "40", 2, "macaque"], ["40", "45", 5, "Rat"],
+//    ["40", "46", 7, "Birds"], ["112", "111", 7, "Birds"], ["41", "42", 7, "Birds"], ["48", "49", 2, "macaque"], ["49", "43", 5, "Rat"], ["44", "50", 7, "Birds"],
+//    ["30", "34", 2, "macaque"], ["34", "35", 5, "Rat"], ["35", "36", 7, "Birds"], ["33", "32", 2, "macaque"], ["7", "3", 5, "Rat"], ["19", "20", 5, "Rat"],
+//    ["20", "21", 7, "Birds"],
+//    ["39", "16", 1, "Homo sapiens"], ["45", "48", 1, "Homo sapiens"], ["49", "44", 1, "Homo sapiens"], ["44", "35", 1, "Homo sapiens"],
+//    ["34", "31", 1, "Homo sapiens"], ["9", "21", 1, "Homo sapiens"], ["23", "25", 1, "Homo sapiens"]];
+
 var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
     [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
     [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
@@ -9,8 +22,12 @@ var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [
     [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
     [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
     [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-    [20, 21, 7, "Birds"]];
-var RequiredNodeList = [1, 2];
+    [20, 21, 7, "Birds"],
+    [39, 16, 1, "Homo sapiens"], [45, 48, 1, "Homo sapiens"], [49, 44, 1, "Homo sapiens"], [44, 35, 1, "Homo sapiens"],
+    [34, 31, 1, "Homo sapiens"], [9, 21, 1, "Homo sapiens"], [23, 25, 1, "Homo sapiens"]];
+
+//var RequiredNodeList = ["1", "2", "3", "4", "5", "6"];
+var RequiredNodeList = [1, 2, 3, 4, 5, 6];
 
 var graph = new Graph();
 for (var i = 0; i < edges.length; i++) {
@@ -33,8 +50,6 @@ var dfs = function (start, graph, LongestWeight) {
         if (!visited[from]) {
             visited[from] = true;
 
-            console.log(visited);
-
             NodeList.push(from);
 
             // iterates over all outgoing vertices of the `from` vertex
@@ -54,13 +69,14 @@ var dfs = function (start, graph, LongestWeight) {
             }
         }
     }
+
     console.log("NodeList: ", NodeList);
     return EdgeList;
 }
 
 var FinalEdges = [];
 for (var i = 0; i < RequiredNodeList.length; i++)
-     FinalEdges[i] = dfs(RequiredNodeList[i], graph, 10);
+    FinalEdges[i] = dfs(RequiredNodeList[i], graph, 50);
 
 for (var i = 0; i < FinalEdges.length; i++)
     console.log("FinalEdges: ", FinalEdges[i]);
