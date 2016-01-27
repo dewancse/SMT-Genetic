@@ -23,7 +23,7 @@ var SMT = function () {
 
     genetic.RequiredNodeList = [
         "transitional sensory area",
-        //"supplementary sensory area",
+        "supplementary sensory area",
         "ventroposterior superior nucleus thalami",
         "receptive field for the foot in area5",
         "globus pallidus internal part"
