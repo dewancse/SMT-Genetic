@@ -5,6 +5,7 @@
 
 var TempList = [];
 //var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+//var RequiredNodeList = [1, 4];
 
 var RequiredNodeList = [
     "transitional sensory area",
@@ -14,6 +15,7 @@ var RequiredNodeList = [
     "globus pallidus internal part"
 ];
 
+var paths = [];
 //var RequiredNodeList = [
 //    "midbraiin reticular nucleus retrorubral area",
 //    "agranular frontal area 1 (primary motor area)",
@@ -96,16 +98,8 @@ var SMT = function () {
             return chromosome;
         }
 
-        var paths = [];
-        for (var i = 0; i < RequiredNodeList.length; i++) {
-            for (var j = i + 1; j < RequiredNodeList.length; j++) {
-                // iterates over all paths between `from` and `to` in the graph
-                for (var it = graph.paths(RequiredNodeList[i], RequiredNodeList[j]), kv; !(kv = it.next()).done;) {
-                    var path = kv.value;
-                    paths.push([path]);
-                    chromosomes.push(this.chromos(paths.shift()));
-                }
-            }
+        while (paths.length > 0) {
+            chromosomes.push(this.chromos(paths.shift()));
         }
 
         console.log("set of chromosomes");
@@ -324,6 +318,7 @@ var SMT = function () {
                  * If SearchList[i] has a path to or from SearchList[j]
                  * Then update FoundList and AttemptedList
                  */
+
                 if (graph.hasPath(SearchList[i], SearchList[j])) {
                     FoundList = FoundList.concat(j);
                     AttemptedList[j] = true;
@@ -343,15 +338,16 @@ var SMT = function () {
         }
 
         /*
-         * TotalDisconnected value is is Sum of DisconnectedValuesList
+         * TotalDisconnected value is Sum of DisconnectedValuesList
          */
+
         var TotalDisconnected = 0;
         for (var i = 0; i < DisconnectedValuesList.length; i++)
             TotalDisconnected += DisconnectedValuesList[i];
 
         console.log("sumEdges, TotalDisconnected, maxEdge: ", sumEdges, TotalDisconnected, maxEdge);
 
-        fitness = sumEdges + ((maxEdge + 1) * TotalDisconnected * TotalDisconnected);
+        fitness = sumEdges + (maxEdge + 1) * TotalDisconnected * TotalDisconnected;
 
         console.log("Fitness returned: " + fitness);
         return fitness;
@@ -550,7 +546,21 @@ var SMT = function () {
 
         // add the nodes
         node.append("circle")
-            .attr("r", 5);
+            .attr("r", 5)
+            .style("fill", function (d) {
+                for (var i = 0; i < RequiredNodeList.length; i++) {
+                    if (d.name === RequiredNodeList[i]) {
+                        return "red";
+                    }
+                }
+            })
+            .style("r", function (d) {
+                for (var i = 0; i < RequiredNodeList.length; i++) {
+                    if (d.name === RequiredNodeList[i]) {
+                        return 8;
+                    }
+                }
+            });
 
         // add the text
         node.append("text")
@@ -737,8 +747,8 @@ var SMT = function () {
         return MaxEdge;
     }
 
-    LongestWeight = FindMaxPathEdges();
-    console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+    //LongestWeight = FindMaxPathEdges();
+    //console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
     /*
      * Test cases
@@ -810,6 +820,18 @@ var SMT = function () {
     //    [39, 16, 1, "Homo sapiens"], [45, 48, 1, "Homo sapiens"], [49, 44, 1, "Homo sapiens"], [44, 35, 1, "Homo sapiens"],
     //    [34, 31, 1, "Homo sapiens"], [9, 21, 1, "Homo sapiens"], [23, 25, 1, "Homo sapiens"]];
 
+    //Test- complete_graph
+    var nodes = [1, 2, 3, 4, 5];
+    var edges = [[1, 2, 2], [1, 3, 2], [1, 4, 2], [1, 5, 2], [2, 1, 2], [2, 3, 2], [2, 4, 2], [2, 5, 2],
+        [3, 1, 2], [3, 2, 2], [3, 4, 2], [3, 5, 2], [4, 1, 2], [4, 2, 2], [4, 3, 2], [4, 5, 2],
+        [5, 1, 2], [5, 2, 2], [5, 3, 2], [5, 4, 2]];
+
+    //var nodes = [1, 2, 3, 4, 5, 6, 7];
+    //var edges = [[1, 2, 2], [1, 3, 2], [1, 4, 2], [1, 5, 2], [1, 6, 2], [1, 7, 2], [2, 1, 2], [2, 3, 2], [2, 4, 2],
+    //    [2, 5, 2], [2, 6, 2], [2, 7, 2], [3, 1, 2], [3, 2, 2], [3, 4, 2], [3, 5, 2], [3, 6, 2], [3, 7, 2], [4, 1, 2],
+    //    [4, 2, 2], [4, 3, 2], [4, 5, 2], [4, 6, 2], [4, 7, 2], [5, 1, 2], [5, 2, 2], [5, 3, 2], [5, 4, 2], [5, 6, 2],
+    //    [5, 7, 2], [6, 1, 2], [6, 2, 2], [6, 3, 2], [6, 4, 2], [6, 5, 2], [6, 7, 2], [7, 1, 2], [7, 2, 2], [7, 3, 2],
+    //    [7, 4, 2], [7, 5, 2], [7, 6, 2]];
 
     //test-5 (Getting nodes and edges from data.json)
 
@@ -838,113 +860,140 @@ var SMT = function () {
             }
         }
 
-    /*
-     * Configuration parameters
-     * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
-     * @size: Population size, Default - 250, Type - Real Number
-     * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
-     * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
-     * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
-     * Default - 0, Type - Real Number
-     *
-     * (WE MAY USE THESE IN FUTURE)
-     * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
-     * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
-     * Type - Real Number
-     */
+        /*
+         * Configuration parameters
+         * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
+         * @size: Population size, Default - 250, Type - Real Number
+         * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
+         * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
+         * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
+         * Default - 0, Type - Real Number
+         *
+         * (WE MAY USE THESE IN FUTURE)
+         * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
+         * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
+         * Type - Real Number
+         */
 
-    var config = {
-        "iterations": 100
-        , "size": 250
-        , "crossover": 0.9
-        , "mutation": 0.2
-        , "skip": 0
-        , "webWorkers": false
-        , "fittestAlwaysSurvives": true
-    };
+        var config = {
+            "iterations": 100
+            , "size": 250
+            , "crossover": 0.9
+            , "mutation": 0.2
+            , "skip": 0
+            , "webWorkers": false
+            , "fittestAlwaysSurvives": true
+        };
 
-    var graphDFS = new Graph();
+        var graphDFS = new Graph();
 
-    for (var i = 0; i < edges.length; i++) {
-        graphDFS.createEdge(edges[i][0], edges[i][1], edges[i][2], edges[i][3]);
-        graphDFS.createEdge(edges[i][1], edges[i][0], edges[i][2], edges[i][3]);
-    }
-
-    console.log("Before DFS: ", graphDFS);
-
-    function FilterRequiredNodeList(RequiredNode) {
-        for (var i = 0; i < RequiredNodeList.length; i++) {
-            if (RequiredNode == RequiredNodeList[i])
-                return true;
+        for (var i = 0; i < edges.length; i++) {
+            graphDFS.createEdge(edges[i][0], edges[i][1], edges[i][2], edges[i][3]);
+            graphDFS.createEdge(edges[i][1], edges[i][0], edges[i][2], edges[i][3]);
         }
 
-        return false;
-    }
+        function FilterRequiredNodeList(RequiredNode) {
+            for (var i = 0; i < RequiredNodeList.length; i++) {
+                if (RequiredNode == RequiredNodeList[i])
+                    return true;
+            }
 
-    /*
-     * DFS Implementation to traverse from all required nodes
-     */
-    var visited = [];
-    var NodeList = [];
-    var EdgeToList = [];
-    var DFSEdgeList = [];
-    var PathToWeight = [];
-
-    function dfs(graph, from, counter, LongestWeight) {
-
-        if (counter == 0) {
-            console.log("Initialization");
-            EdgeToList[from] = [];
-            PathToWeight[from] = 0;
+            return false;
         }
 
-        counter++;
-        visited[from] = true;
-        NodeList.push(from);
+        console.log("Before DFS: ", graphDFS);
 
-        for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
-            var to = kv.value[0],
-                vertexValue = kv.value[1],
-                edgeValue = kv.value[2];
+        /*
+         * DFS Implementation to traverse from all required nodes
+         */
+        var visited = [];
+        var NodeList = [];
+        var EdgeToList = [];
+        var DFSEdgeList = [];
+        var PathToWeight = [];
+        var EdgeToPath = [];
 
-            if (!visited[to]) {
-                if (PathToWeight[from] + edgeValue <= LongestWeight) {
-                    console.log(from, to);
+        function dfs(graph, from, counter, LongestWeight) {
 
-                    PathToWeight[to] = PathToWeight[from] + edgeValue;
-                    EdgeToList[to] = EdgeToList[from].concat([from, to, edgeValue]);
+            if (counter == 0) {
+                console.log("Initialization");
+                EdgeToList[from] = [];
+                PathToWeight[from] = 0;
 
-                    if (FilterRequiredNodeList(to)) {
-                        //console.log("PathToWeight: ", PathToWeight[to]);
-                        //console.log("EdgeToWeight: ", EdgeToList[to]);
-                        //console.log(visited);
+                EdgeToPath[from] = [from];
+                DFSEdgeList = [];
+            }
 
-                        for (var i = 0; i < EdgeToList[to].length; i++) {
-                            DFSEdgeList.push([EdgeToList[to][i], EdgeToList[to][++i], EdgeToList[to][++i]]);
+            counter++;
+            visited[from] = true;
+            NodeList.push(from);
+
+            for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+                var to = kv.value[0],
+                    vertexValue = kv.value[1],
+                    edgeValue = kv.value[2];
+
+                if (!visited[to]) {
+                    if (PathToWeight[from] + edgeValue <= LongestWeight) {
+                        //console.log(from, to);
+
+                        PathToWeight[to] = PathToWeight[from] + edgeValue;
+                        EdgeToList[to] = EdgeToList[from].concat([from, to, edgeValue]);
+
+                        EdgeToPath[to] = EdgeToPath[from].concat([to]);
+
+                        if (FilterRequiredNodeList(to)) {
+                            for (var i = 0; i < EdgeToList[to].length; i++) {
+                                DFSEdgeList.push([EdgeToList[to][i], EdgeToList[to][++i], EdgeToList[to][++i]]);
+                            }
+
+                            //console.log(EdgeToPath[to]);
+                            paths.push(EdgeToPath[to]);
                         }
-                    }
 
-                    dfs(graph, to, counter, LongestWeight);
+                        dfs(graph, to, counter, LongestWeight);
+                    }
                 }
             }
+
+            visited[from] = false;
+            return DFSEdgeList;
         }
 
-        visited[from] = false;
-        return DFSEdgeList;
-    }
+        var EdgeList = [];
+        var temp = [];
+        var c = 0;
+        for (var m = 0; m < RequiredNodeList.length; m++) {
+            console.log("RequiredNode: ", RequiredNodeList[m]);
 
-    var EdgeList = [];
-    var temp = [];
-    var c = 0;
-    for (var m = 0; m < RequiredNodeList.length; m++) {
-        console.log(RequiredNodeList[m]);
-        temp = dfs(graphDFS, RequiredNodeList[m], 0, LongestWeight);
+            temp = dfs(graphDFS, RequiredNodeList[m], 0, 10);
 
+            console.log("RequiredNode # of Edges: ", temp.length);
+            //for (var n = 0; n < temp.length; n++)
+            //    console.log(temp[n]);
+
+            //var g = new Graph();
+            //for (var i = 0; i < temp.length; i++) {
+            //    g.createEdge(temp[i][0], temp[i][1], temp[i][2]);
+            //    g.createEdge(temp[i][1], temp[i][0], temp[i][2]);
+            //}
+            //console.log(g);
+
+            EdgeList = EdgeList.concat(temp);
+
+            c++;
+        }
+
+        console.log("counter: ", c);
+
+        /*
+         * Utility function for removing non-unique edges from our solution
+         */
         function uniqueify(es) {
             var retval = [];
             es.forEach(function (e) {
                 for (var j = 0; j < retval.length; j++) {
-                    if ((retval[j][0] === e[0] && retval[j][1] === e[1]) || (retval[j][0] === e[1] && retval[j][1] === e[0]))
+                    if ((retval[j][0] === e[0] && retval[j][1] === e[1]) || (retval[j][1] === e[0] && retval[j][0] === e[1]))
                         return;
                 }
                 retval.push(e);
@@ -952,96 +1001,62 @@ var SMT = function () {
             return retval;
         }
 
-        temp = uniqueify(temp);
+        EdgeList = uniqueify(EdgeList);
 
-        for (var n = 0; n < temp.length; n++)
-            console.log(temp[n]);
-
-        var g = new Graph();
-        for (var i = 0; i < temp.length; i++) {
-            g.createEdge(temp[i][0], temp[i][1], temp[i][2]);
-            g.createEdge(temp[i][1], temp[i][0], temp[i][2]);
-        }
-        console.log(g);
-
-        EdgeList = EdgeList.concat(temp);
-
-        c++;
-    }
-
-    console.log("counter: ", c);
-
-    /*
-     * Utility function for removing non-unique edges from our solution
-     */
-    function uniqueify(es) {
-        var retval = [];
-        es.forEach(function (e) {
-            for (var j = 0; j < retval.length; j++) {
-                if ((retval[j][0] === e[0] && retval[j][1] === e[1]) || (retval[j][0] === e[1] && retval[j][1] === e[0]))
-                    return;
-            }
-            retval.push(e);
-        });
-        return retval;
-    }
-
-    EdgeList = uniqueify(EdgeList);
-
-    /*
-     * adding weight and species from the original dataset into our EdgeList
-     */
-    for (var i = 0; i < EdgeList.length; i++) {
-        for (var j = 0; j < edges.length; j++) {
-            if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1])) {
-                EdgeList[i][2] = edges[j][2];
-                EdgeList[i][3] = edges[j][3];
+        /*
+         * adding weight and species from the original dataset into our EdgeList
+         */
+        for (var i = 0; i < EdgeList.length; i++) {
+            for (var j = 0; j < edges.length; j++) {
+                if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1])) {
+                    EdgeList[i][2] = edges[j][2];
+                    EdgeList[i][3] = edges[j][3];
+                }
             }
         }
-    }
 
-    for (var i = 0; i < EdgeList.length; i++)
-        console.log("EdgeList: ", EdgeList[i]);
+        for (var i = 0; i < EdgeList.length; i++)
+            console.log("EdgeList: ", EdgeList[i]);
 
-    console.log("TotalEdgeList: ", EdgeList.length);
+        console.log("TotalEdgeList: ", EdgeList.length);
 
-    var graphEdgeList = new Graph();
-    for (var i = 0; i < EdgeList.length; i++) {
-        graphEdgeList.createEdge(EdgeList[i][0], EdgeList[i][1], EdgeList[i][2]);
-        graphEdgeList.createEdge(EdgeList[i][1], EdgeList[i][0], EdgeList[i][2]);
-    }
+        var graphEdgeList = new Graph();
+        for (var i = 0; i < EdgeList.length; i++) {
+            graphEdgeList.createEdge(EdgeList[i][0], EdgeList[i][1], EdgeList[i][2]);
+            graphEdgeList.createEdge(EdgeList[i][1], EdgeList[i][0], EdgeList[i][2]);
+        }
 
-    console.log("graphEdgeList: ", graphEdgeList);
+        console.log("graphEdgeList: ", graphEdgeList);
 
-    /*
-     * Initial GA input
-     */
-    var userData = {
-        "nodes": nodes,
-        "edges": EdgeList
-    };
+        /*
+         * Initial GA input
+         */
+        var userData = {
+            "nodes": nodes,
+            "edges": EdgeList
+        };
 
-    /*
-     * GA starts beyond this point
-     * measure execution time
-     */
-    var start = new Date().getTime();
+        /*
+         * GA starts beyond this point
+         * measure execution time
+         */
+        var start = new Date().getTime();
 
-    genetic.evolve(config, userData);
+        //genetic.evolve(config, userData);
 
-    var end = new Date().getTime();
+        var end = new Date().getTime();
 
-    /*
-     * Only measure execution time of GA. Skip execution
-     * of Draw function from genetic.notification. Fix this!!
-     */
-    console.log("Execution Time: ", end - start);
+        /*
+         * Only measure execution time of GA. Skip execution
+         * of Draw function from genetic.notification. Fix this!!
+         */
+        console.log("Execution Time: ", end - start);
 
-    d3.select("#svgVisualize").append("text")
-        .attr("stroke", "black")
-        .attr("x", 10)
-        .attr("y", 110)
-        .style("font", "14px sans-serif")
-        .text(end - start + " milliseconds");
+        d3.select("#svgVisualize").append("text")
+            .attr("stroke", "black")
+            .attr("x", 10)
+            .attr("y", 110)
+            .style("font", "14px sans-serif")
+            .text(end - start + " milliseconds");
     });
 }();
