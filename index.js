@@ -875,7 +875,8 @@ var SMT = function () {
              }
          }
 
-        /*
+
+         /*
          * Configuration parameters
          * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
          * @size: Population size, Default - 250, Type - Real Number
@@ -894,7 +895,7 @@ var SMT = function () {
             "iterations": 100
             , "size": 250
             , "crossover": 0.9
-            , "mutation": 0.5
+            , "mutation": 0.2
             , "skip": 0
             , "webWorkers": false
             , "fittestAlwaysSurvives": true
