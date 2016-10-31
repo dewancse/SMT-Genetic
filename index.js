@@ -44,40 +44,40 @@ var paths = [];
 // ];
 
 /* Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png) */
-// var RequiredNodeList = [
-//     "precommissural nucleus",
-//     "nucleus of the posterior commissure",
-//     "claustrum",
-//     "visual area 1",
-//     "visual area 2",
-//     "pallium",
-//     "habenula"
-// ];
-// var RequiredNodeList2 = [
-//     "precommissural nucleus",
-//     "nucleus of the posterior commissure",
-//     "claustrum",
-//     "visual area 1",
-//     "visual area 2",
-//     "pallium",
-//     "habenula"
-// ];
-
-/* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
 var RequiredNodeList = [
-   "agranular area of temporal polar cortex",
-   "nucleus of the posterior commissure",
-   "lateral geniculate body",
-   "cortical areas 1 & 2",
-   "flocculus"
+    "precommissural nucleus",
+    "nucleus of the posterior commissure",
+    "claustrum",
+    "visual area 1",
+    "visual area 2",
+    "pallium",
+    "habenula"
 ];
 var RequiredNodeList2 = [
-   "agranular area of temporal polar cortex",
-   "nucleus of the posterior commissure",
-   "lateral geniculate body",
-   "cortical areas 1 & 2",
-   "flocculus"
+    "precommissural nucleus",
+    "nucleus of the posterior commissure",
+    "claustrum",
+    "visual area 1",
+    "visual area 2",
+    "pallium",
+    "habenula"
 ];
+
+/* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
+// var RequiredNodeList = [
+//    "agranular area of temporal polar cortex",
+//    "nucleus of the posterior commissure",
+//    "lateral geniculate body",
+//    "cortical areas 1 & 2",
+//    "flocculus"
+// ];
+// var RequiredNodeList2 = [
+//    "agranular area of temporal polar cortex",
+//    "nucleus of the posterior commissure",
+//    "lateral geniculate body",
+//    "cortical areas 1 & 2",
+//    "flocculus"
+// ];
 
 var SMT = function () {
 
@@ -708,32 +708,32 @@ var SMT = function () {
     //    ["nucleus lateralis posterior thalami", "supplementary motor area", 2, "macaque"]];
 
     //Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png)
-    // var outputSMT = [
-    //     ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
-    //     ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
-    //     ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
-    //     ["claustrum", "visual area 1", 2, "macaque"],
-    //     ["claustrum", "dorsomedial visual area", 2, "macaque"],
-    //     ["claustrum", "entorhinal cortex", 2, "macaque"],
-    //     ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //     ["hippocampus", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //     ["pallium", "hippocampus", 7, "Birds"],
-    //     ["pallium", "habenula", 7, "Birds"],
-    //     ["visual area 1", "visual area 2", 2, "macaque"]
-    // ];
+    var outputSMT = [
+        ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
+        ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
+        ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
+        ["claustrum", "visual area 1", 2, "macaque"],
+        ["claustrum", "dorsomedial visual area", 2, "macaque"],
+        ["claustrum", "entorhinal cortex", 2, "macaque"],
+        ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        ["hippocampus", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        ["pallium", "hippocampus", 7, "Birds"],
+        ["pallium", "habenula", 7, "Birds"],
+        ["visual area 1", "visual area 2", 2, "macaque"]
+    ];
 
     //Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png)
-    var outputSMT = [
-       [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
-       [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
-       [ "nucleus pulvinaris lateralis thalami", "visual area 1", 2, "macaque" ],
-       [ "nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
-       [ "claustrum", "visual area 1", 2, "macaque" ],
-       [ "lateral geniculate body", "visual area 1", 1, "Homo sapiens" ],
-       [ "claustrum", "cortical areas 1 & 2", 2, "macaque" ],
-       [ "pontine gray", "flocculus", 5, "Rat" ],
-       [ "cortical areas 1 & 2", "pontine gray", 2, "macaque" ]
-    ];
+    // var outputSMT = [
+    //    [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
+    //    [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+    //    [ "nucleus pulvinaris lateralis thalami", "visual area 1", 2, "macaque" ],
+    //    [ "nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+    //    [ "claustrum", "visual area 1", 2, "macaque" ],
+    //    [ "lateral geniculate body", "visual area 1", 1, "Homo sapiens" ],
+    //    [ "claustrum", "cortical areas 1 & 2", 2, "macaque" ],
+    //    [ "pontine gray", "flocculus", 5, "Rat" ],
+    //    [ "cortical areas 1 & 2", "pontine gray", 2, "macaque" ]
+    // ];
 
     var LongestWeight;
     var FindMaxPathEdges = function () {
