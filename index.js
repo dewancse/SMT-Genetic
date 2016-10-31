@@ -659,10 +659,10 @@ var SMT = function () {
     /* Pre-process longest weight from the tests data below */
 
     //Test-1 test example in GA.jpg
-    var outputSMT = [[1, 2, 1], [3, 4, 1]];
+    //var outputSMT = [[1, 2, 1], [3, 4, 1]];
 
     //Test-2 test example in GA.jpg
-    //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
+    var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
 
     //Test-3 test example in GA.jpg
     //var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
@@ -847,12 +847,12 @@ var SMT = function () {
     /* Making Graph */
 
     //Test-1 test example in GA.jpg
-    var nodes = [1, 2, 3, 4, 5, 6];
-    var edges = [[1, 2, 1], [3, 4, 1]];
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [3, 4, 1]];
 
     //Test-2 test example in GA.jpg
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
+    var nodes = [1, 2, 3, 4, 5, 6];
+    var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
 
     //Test-3 test example in GA.jpg
     //var nodes = [1, 2, 3, 4, 5, 6];
