@@ -7,8 +7,8 @@ var TempList = [];
 var paths = [];
 
 /* Test 1, 2, 3, and 4 (50 node example) */
-var RequiredNodeList = [1, 2, 3, 4, 5, 6];
-var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
+//var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+//var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
 
 /* Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png) */
 // var RequiredNodeList = [
@@ -59,6 +59,22 @@ var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
 //     "pallium",
 //     "habenula"
 // ];
+
+/* Test-7.2 SMT and SMT-Genetic both works (SMT-Fails-3.png) */
+var RequiredNodeList = [
+    "subiculum",
+    "cortical area 3a",
+    "pallium",
+    "hippocampus",
+    "hypothalamus"
+];
+var RequiredNodeList2 = [
+    "subiculum",
+    "cortical area 3a",
+    "pallium",
+    "hippocampus",
+    "hypothalamus"
+];
 
 /* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
 // var RequiredNodeList = [
@@ -671,11 +687,11 @@ var SMT = function () {
     // var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //Test-4 test example for 50 node
-    var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-       [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
-       [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
-       [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
-    ];
+    //var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+    //   [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
+    //   [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
+    //   [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
+    //];
 
     //Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
     // var outputSMT = [
@@ -800,8 +816,8 @@ var SMT = function () {
         return MaxEdge;
     }
 
-    LongestWeight = FindMaxPathEdges();
-    console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+    //LongestWeight = FindMaxPathEdges();
+    //console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
     /* Making Graph */
 
@@ -818,46 +834,46 @@ var SMT = function () {
     // var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //Test-4 test example for 50 node
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-       30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-       [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
-       [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
-       [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
-       [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
-       [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
-       [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
-       [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-       [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-       [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
-       [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
-    ];
+    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    //   30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    //var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+    //   [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
+    //   [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
+    //   [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
+    //   [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
+    //   [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
+    //   [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
+    //   [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
+    //   [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+    //   [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
+    //   [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
+    //];
 
     //test-5 (Getting nodes and edges from data.json)
-    // var nodes = [];
-    // var edges = [];
-    //
-    // d3.json("data.json", function (data) {
-    //
-    //     for (var i = 0; i < data["nodes"].length; i++) {
-    //         nodes[i] = data["nodes"][i];
-    //     }
-    //
-    //     for (var j = 0; j < data["edges"].length; j++) {
-    //         edges.push([]);
-    //         edges[j].push(new Array(4));
-    //         for (var k = 0; k < 4; k++) {
-    //             if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
-    //                 edges[j][3] = "macaque";
-    //             }
-    //             else if (data["edges"][j][3] == "rattus norvegicus") {
-    //                 edges[j][3] = "Rat";
-    //             }
-    //             else {
-    //                 edges[j][k] = data["edges"][j][k];
-    //             }
-    //         }
-    //     }
+     var nodes = [];
+     var edges = [];
+
+     d3.json("data.json", function (data) {
+
+         for (var i = 0; i < data["nodes"].length; i++) {
+             nodes[i] = data["nodes"][i];
+         }
+
+         for (var j = 0; j < data["edges"].length; j++) {
+             edges.push([]);
+             edges[j].push(new Array(4));
+             for (var k = 0; k < 4; k++) {
+                 if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+                     edges[j][3] = "macaque";
+                 }
+                 else if (data["edges"][j][3] == "rattus norvegicus") {
+                     edges[j][3] = "Rat";
+                 }
+                 else {
+                     edges[j][k] = data["edges"][j][k];
+                 }
+             }
+         }
 
         /*
          * Configuration parameters
@@ -878,7 +894,7 @@ var SMT = function () {
             "iterations": 100
             , "size": 250
             , "crossover": 0.9
-            , "mutation": 0.3
+            , "mutation": 0.5
             , "skip": 0
             , "webWorkers": false
             , "fittestAlwaysSurvives": true
@@ -986,7 +1002,7 @@ var SMT = function () {
         for (var m = 0; m < RequiredNodeList.length; m++) {
             console.log("RequiredNode: ", RequiredNodeList[m]);
 
-            temp = dfs(graphDFS, RequiredNodeList[m], 0, LongestWeight);
+            temp = dfs(graphDFS, RequiredNodeList[m], 0, 7);
 
             console.log("Required # of Paths: ", paths.length);
             console.log("Required # of Edges: ", temp.length);
@@ -1103,5 +1119,5 @@ var SMT = function () {
             .attr("y", 110)
             .style("font", "14px sans-serif")
             .text(end - start + " milliseconds");
-    // });
+     });
 }();
