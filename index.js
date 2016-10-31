@@ -14,34 +14,34 @@ var paths = [];
  * Uniform works 6 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
  * Two-point works 7 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
  */
-// var RequiredNodeList = [
-//    "transitional sensory area",
-//    "supplementary sensory area",
-//    "ventroposterior superior nucleus thalami",
-//    "receptive field for the foot in area5",
-//    "globus pallidus internal part"
-// ];
-// var RequiredNodeList2 = [
-//    "transitional sensory area",
-//    "supplementary sensory area",
-//    "ventroposterior superior nucleus thalami",
-//    "receptive field for the foot in area5",
-//    "globus pallidus internal part"
-// ];
-
-/* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png) */
 var RequiredNodeList = [
    "transitional sensory area",
+   "supplementary sensory area",
    "ventroposterior superior nucleus thalami",
    "receptive field for the foot in area5",
    "globus pallidus internal part"
 ];
 var RequiredNodeList2 = [
    "transitional sensory area",
+   "supplementary sensory area",
    "ventroposterior superior nucleus thalami",
    "receptive field for the foot in area5",
    "globus pallidus internal part"
 ];
+
+/* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png) */
+// var RequiredNodeList = [
+//    "transitional sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+// ];
+// var RequiredNodeList2 = [
+//    "transitional sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+// ];
 
 /* Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png) */
 // var RequiredNodeList = [
@@ -681,31 +681,31 @@ var SMT = function () {
     //];
 
     //Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
-    // var outputSMT = [
-    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
-    //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
-    //    ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
-    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
-    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
-    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-    //    ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]
-    // ];
-
-    // Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
-    // Commented out "supplementary sensory area" in the RequiredNodeList
-    var outputSMT = [["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    var outputSMT = [
+       ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+       ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
+       ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
        ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
        ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
        ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
        ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
        ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-       ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
-       ["medial superior temporal area", "area 23c", 2, "macaque"],
-       ["area 23c", "supplementary motor area", 2, "macaque"],
-       ["nucleus lateralis posterior thalami", "supplementary motor area", 2, "macaque"]];
+       ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
+       ["medial superior temporal area", "cortical area 46", 2, "macaque"]
+    ];
+
+    // Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
+    // Commented out "supplementary sensory area" in the RequiredNodeList
+    // var outputSMT = [["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["medial superior temporal area", "area 23c", 2, "macaque"],
+    //    ["area 23c", "supplementary motor area", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "supplementary motor area", 2, "macaque"]];
 
     //Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png)
     // var outputSMT = [
