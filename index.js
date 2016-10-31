@@ -14,20 +14,20 @@ var paths = [];
  * Uniform works 6 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
  * Two-point works 7 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
  */
-var RequiredNodeList = [
-   "transitional sensory area",
-   "supplementary sensory area",
-   "ventroposterior superior nucleus thalami",
-   "receptive field for the foot in area5",
-   "globus pallidus internal part"
-];
-var RequiredNodeList2 = [
-   "transitional sensory area",
-   "supplementary sensory area",
-   "ventroposterior superior nucleus thalami",
-   "receptive field for the foot in area5",
-   "globus pallidus internal part"
-];
+// var RequiredNodeList = [
+//    "transitional sensory area",
+//    "supplementary sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+// ];
+// var RequiredNodeList2 = [
+//    "transitional sensory area",
+//    "supplementary sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+// ];
 
 /* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png) */
 // var RequiredNodeList = [
@@ -64,20 +64,20 @@ var RequiredNodeList2 = [
 // ];
 
 /* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
-// var RequiredNodeList = [
-//    "agranular area of temporal polar cortex",
-//    "nucleus of the posterior commissure",
-//    "lateral geniculate body",
-//    "cortical areas 1 & 2",
-//    "flocculus"
-// ];
-// var RequiredNodeList2 = [
-//    "agranular area of temporal polar cortex",
-//    "nucleus of the posterior commissure",
-//    "lateral geniculate body",
-//    "cortical areas 1 & 2",
-//    "flocculus"
-// ];
+var RequiredNodeList = [
+   "agranular area of temporal polar cortex",
+   "nucleus of the posterior commissure",
+   "lateral geniculate body",
+   "cortical areas 1 & 2",
+   "flocculus"
+];
+var RequiredNodeList2 = [
+   "agranular area of temporal polar cortex",
+   "nucleus of the posterior commissure",
+   "lateral geniculate body",
+   "cortical areas 1 & 2",
+   "flocculus"
+];
 
 var SMT = function () {
 
@@ -681,18 +681,18 @@ var SMT = function () {
     //];
 
     //Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
-    var outputSMT = [
-       ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
-       ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
-       ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
-       ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
-       ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
-       ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
-       ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-       ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-       ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
-       ["medial superior temporal area", "cortical area 46", 2, "macaque"]
-    ];
+    // var outputSMT = [
+    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]
+    // ];
 
     // Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
     // Commented out "supplementary sensory area" in the RequiredNodeList
@@ -723,17 +723,17 @@ var SMT = function () {
     // ];
 
     //Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png)
-    // var outputSMT = [
-    //    [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
-    //    [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
-    //    [ "nucleus pulvinaris lateralis thalami", "visual area 1", 2, "macaque" ],
-    //    [ "nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
-    //    [ "claustrum", "visual area 1", 2, "macaque" ],
-    //    [ "lateral geniculate body", "visual area 1", 1, "Homo sapiens" ],
-    //    [ "claustrum", "cortical areas 1 & 2", 2, "macaque" ],
-    //    [ "pontine gray", "flocculus", 5, "Rat" ],
-    //    [ "cortical areas 1 & 2", "pontine gray", 2, "macaque" ]
-    // ];
+    var outputSMT = [
+       [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
+       [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+       [ "nucleus pulvinaris lateralis thalami", "visual area 1", 2, "macaque" ],
+       [ "nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+       [ "claustrum", "visual area 1", 2, "macaque" ],
+       [ "lateral geniculate body", "visual area 1", 1, "Homo sapiens" ],
+       [ "claustrum", "cortical areas 1 & 2", 2, "macaque" ],
+       [ "pontine gray", "flocculus", 5, "Rat" ],
+       [ "cortical areas 1 & 2", "pontine gray", 2, "macaque" ]
+    ];
 
     var LongestWeight;
     var FindMaxPathEdges = function () {
@@ -989,7 +989,7 @@ var SMT = function () {
         for (var m = 0; m < RequiredNodeList.length; m++) {
             console.log("RequiredNode: ", RequiredNodeList[m]);
 
-            temp = dfs(graphDFS, RequiredNodeList[m], 0, 8); // 8 is the maximum weight between two required node
+            temp = dfs(graphDFS, RequiredNodeList[m], 0, 7); // 7 is the maximum weight between two required node
 
             console.log("Required # of Paths: ", paths.length);
             console.log("Required # of Edges: ", temp.length);
