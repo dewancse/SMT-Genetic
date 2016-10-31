@@ -8,7 +8,7 @@
 var TempList = [];
 var paths = [];
 
-/* Test example for GA.jpg and 50 node example */
+/* Test 1, 2, 3, and 4 (50 node example) */
 var RequiredNodeList = [1, 2, 3, 4, 5, 6];
 var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
 
@@ -261,24 +261,6 @@ var SMT = function () {
 
         var son = father.slice(0, ca).concat(mother.slice(ca, cb)).concat(father.slice(cb));
         var daughter = mother.slice(0, ca).concat(father.slice(ca, cb)).concat(mother.slice(cb));
-
-        /*
-         * two-point crossover
-         * same as above but in this case swap mother and father while concatenation
-         * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
-         */
-        //var len = mother.length;
-        //var ca = Math.floor(Math.random() * len);
-        //var cb = Math.floor(Math.random() * len);
-        //
-        //if (ca > cb) {
-        //    var tmp = cb;
-        //    cb = ca;
-        //    ca = tmp;
-        //}
-        //
-        //var son = mother.slice(0, ca).concat(father.slice(ca, cb)).concat(mother.slice(cb));
-        //var daughter = father.slice(0, ca).concat(mother.slice(ca, cb)).concat(father.slice(cb));
 
         /*
          * Uniform crossover
@@ -676,23 +658,23 @@ var SMT = function () {
 
     /* Pre-process longest weight from the tests data below */
 
-    //test-1
-    //var outputSMT = [[1, 2, 1], [3, 4, 1]];
+    //Test-1 test example in GA.jpg
+    var outputSMT = [[1, 2, 1], [3, 4, 1]];
 
-    //test-2
+    //Test-2 test example in GA.jpg
     //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
 
-    //test-3
+    //Test-3 test example in GA.jpg
     //var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
-    //test-4
-    var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-        [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
-        [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
-        [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
-    ];
+    //Test-4 test example for 50 node
+    //var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+    //    [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
+    //    [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
+    //    [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
+    //];
 
-    //test-5.1 -- SMT fails but SMT-Genetic works
+    //Test-5.1 -- SMT fails but SMT-Genetic works
     //var outputSMT = [
     //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
     //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
@@ -706,7 +688,7 @@ var SMT = function () {
     //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]
     //];
 
-    //test-5.2 -- SMT fails but SMT-Genetic works
+    //Test-5.2 -- SMT fails but SMT-Genetic works
     //Commented out "supplementary sensory area" in the RequiredNodeList
     //var outputSMT = [["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
     //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
@@ -719,7 +701,7 @@ var SMT = function () {
     //    ["area 23c", "supplementary motor area", 2, "macaque"],
     //    ["nucleus lateralis posterior thalami", "supplementary motor area", 2, "macaque"]];
 
-    //test-6
+    //Test-6
     //var outputSMT = [["agranular frontal area 1 (primary motor area)", "rostral inferior parietal lobule", 2, "macaque"],
     //    ["posterior cingulate cortex", "nucleus caudatus genu medial dorsal", 2, "macaque"],
     //    ["nucleus caudatus genu medial dorsal", "rostral inferior parietal lobule", 2, "macaque"],
@@ -738,7 +720,7 @@ var SMT = function () {
     //    ["temporopolar area tg", "medial nucleus of the amygdala", 2, "macaque"],
     //    ["claustrum", "temporopolar area tg", 2, "macaque"]];
 
-    //test-7
+    //Test-7
     //var outputSMT = [["parietal area pg medial part", "area 7", 2, "macaque"],
     //    ["area 7", "area 23", 2, "macaque"],
     //    ["middle temporal cortex (occipital)", "lateral geniculate body", 1, "Homo sapiens"],
@@ -763,7 +745,7 @@ var SMT = function () {
     //    ["nucleus of the posterior commissure", "precommissural nucleus", 5, "Rat"],
     //    ["nucleus pulvinaris lateralis thalami", "nucleus of the posterior commissure", 2, "macaque"]];
 
-    //test-8 -- SMT and SMT-Genetic both works
+    //Test-8 -- SMT and SMT-Genetic both works
     //var outputSMT = [
     //    ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
     //    ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
@@ -778,7 +760,7 @@ var SMT = function () {
     //    ["visual area 1", "visual area 2", 2, "macaque"]
     //];
 
-    //test-9 -- SMT and SMT-Genetic both works
+    //Test-9 -- SMT and SMT-Genetic both works
     //var outputSMT = [
     //    [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
     //    [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
@@ -865,8 +847,8 @@ var SMT = function () {
     /* Making Graph */
 
     //Test-1 test example in GA.jpg
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [3, 4, 1]];
+    var nodes = [1, 2, 3, 4, 5, 6];
+    var edges = [[1, 2, 1], [3, 4, 1]];
 
     //Test-2 test example in GA.jpg
     //var nodes = [1, 2, 3, 4, 5, 6];
@@ -877,20 +859,20 @@ var SMT = function () {
     //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //Test-4 test example for 50 node
-    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-        [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
-        [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
-        [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
-        [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
-        [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
-        [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
-        [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-        [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-        [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
-        [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
-    ];
+    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    //var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+    //    [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
+    //    [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
+    //    [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
+    //    [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
+    //    [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
+    //    [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
+    //    [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
+    //    [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+    //    [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
+    //    [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
+    //];
 
     //test-5 (Getting nodes and edges from data.json)
     //var nodes = [];
