@@ -1,40 +1,77 @@
 /**
  * Steiner Minimal Tree implementation using Genetic Algorithm
  * Library: Genetic.js, Graph.js
+ *
+ * This is the update copy of the pairwise DFS of Example 1
  */
 
 var TempList = [];
-//var RequiredNodeList = [1, 2, 3, 4, 5, 6];
-//var RequiredNodeList = [1, 4];
-
-var RequiredNodeList = [
-    "transitional sensory area",
-    "supplementary sensory area",
-    "ventroposterior superior nucleus thalami",
-    "receptive field for the foot in area5",
-    "globus pallidus internal part"
-];
-
 var paths = [];
+
+/* Test example for GA.jpg and 50 node example */
+var RequiredNodeList = [1, 2, 3, 4, 5, 6];
+var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
+
+/* Test example for 50 node example */
+//var RequiredNodeList = [1, 50];
+//var RequiredNodeList2 = [1, 50];
+
+/* SMT fails but SMT-Genetic works
+ * Uniform works 6 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
+ * Two-point works 7 out of 8 runs for mutation 0.3, crossover 0.9, iteration 50, size 250
+ * Comment out "supplementary sensory area" in order to get 2nd example where SMT fails
+ * but SMT-Genetic works
+ */
 //var RequiredNodeList = [
-//    "midbraiin reticular nucleus retrorubral area",
-//    "agranular frontal area 1 (primary motor area)",
-//    "parvocellular laminae of lgn",
-//    "posterior cingulate cortex",
-//    "tegmental reticular nucleus",
-//    "nucleus of the optic tract",
-//    "periventricular zone of the hypothalamus",
-//    "32"
+//    "transitional sensory area",
+//    "supplementary sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
+//];
+//var RequiredNodeList2 = [
+//    "transitional sensory area",
+//    "supplementary sensory area",
+//    "ventroposterior superior nucleus thalami",
+//    "receptive field for the foot in area5",
+//    "globus pallidus internal part"
 //];
 
-//var RequiredNodeList = ["nucleus dorsolateralis anterior thalami pars lateralis",
-//    "abducens nucleus",
-//    "parietal area pg medial part",
-//    "medial nucleus of the amygdala posterodorsal part sublayer c",
-//    "visual area v3",
-//    "middle temporal cortex (occipital)",
+/* SMT and SMT-Genetic both works */
+//var RequiredNodeList = [
+//    "precommissural nucleus",
+//    "nucleus of the posterior commissure",
+//    "claustrum",
+//    "visual area 1",
+//    "visual area 2",
+//    "pallium",
+//    "habenula"
+//];
+//var RequiredNodeList2 = [
+//    "precommissural nucleus",
+//    "nucleus of the posterior commissure",
+//    "claustrum",
+//    "visual area 1",
+//    "visual area 2",
+//    "pallium",
+//    "habenula"
+//];
+
+/* SMT and SMT-Genetic both works */
+//var RequiredNodeList = [
 //    "agranular area of temporal polar cortex",
-//    "intergeniculate leaflet of the lateral geniculate complex"];
+//    "nucleus of the posterior commissure",
+//    "lateral geniculate body",
+//    "cortical areas 1 & 2",
+//    "flocculus"
+//];
+//var RequiredNodeList2 = [
+//    "agranular area of temporal polar cortex",
+//    "nucleus of the posterior commissure",
+//    "lateral geniculate body",
+//    "cortical areas 1 & 2",
+//    "flocculus"
+//];
 
 var SMT = function () {
 
@@ -71,19 +108,13 @@ var SMT = function () {
 
         genetic.chromos = function (path) {
             var myEdges = [];
-            for (var i = 0; i < path.length; i++) {
-                if (path[i].length > 2) {
-                    for (var j = 0; j < path[i].length - 1;) {
-                        myEdges.push([path[i][j], path[i][++j]]);
-                    }
+            if (path.length > 2) {
+                for (var j = 0; j < path.length - 1;) {
+                    myEdges.push([path[j], path[++j]]);
                 }
-                else
-                    myEdges.push(path[i]);
             }
-
-            console.log("Starting myEdges: ", myEdges);
-            for (var i = 0; i < myEdges.length; i++)
-                this.EdgeList.push(myEdges[i]);
+            else
+                myEdges.push(path);
 
             var chromosome = new Array(edges.length + 1).join('0').split('').map(parseFloat);
             for (var i = 0; i < myEdges.length; i++) {
@@ -118,6 +149,8 @@ var SMT = function () {
      * Called to create a chromosome, can be of any type (int, float, string, array, object
      */
     genetic.seed = function () {
+
+        console.log("SEED ... ");
 
         /*
          * creating 50% seed from the combination of our chromosomes
@@ -187,6 +220,8 @@ var SMT = function () {
      * */
     genetic.mutate = function (entity) {
 
+        console.log("mutation ... ");
+
         var len = entity.length;
 
         var ca = Math.floor(Math.random() * len);
@@ -208,6 +243,8 @@ var SMT = function () {
      * */
     genetic.crossover = function (mother, father) {
 
+        console.log("crossover ... ");
+
         /*
          * two-point crossover
          * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
@@ -225,10 +262,78 @@ var SMT = function () {
         var son = father.slice(0, ca).concat(mother.slice(ca, cb)).concat(father.slice(cb));
         var daughter = mother.slice(0, ca).concat(father.slice(ca, cb)).concat(mother.slice(cb));
 
+        /*
+         * two-point crossover
+         * same as above but in this case swap mother and father while concatenation
+         * http://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Two-point_crossover
+         */
+        //var len = mother.length;
+        //var ca = Math.floor(Math.random() * len);
+        //var cb = Math.floor(Math.random() * len);
+        //
+        //if (ca > cb) {
+        //    var tmp = cb;
+        //    cb = ca;
+        //    ca = tmp;
+        //}
+        //
+        //var son = mother.slice(0, ca).concat(father.slice(ca, cb)).concat(mother.slice(cb));
+        //var daughter = father.slice(0, ca).concat(mother.slice(ca, cb)).concat(father.slice(cb));
+
+        /*
+         * Uniform crossover
+         * https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Uniform_crossover_and_half_uniform_crossover
+         */
+        //var len = mother.length;
+        //var mask = [];
+        //
+        ///* A random mask is generated. The mask determines which bits
+        // * are copied from one parent and which from the other parent
+        // */
+        //for (var i = 0; i < len; i++) {
+        //    if (Math.floor(Math.random() * len) % 2 == 0)
+        //        mask.push(1);
+        //    else
+        //        mask.push(0);
+        //}
+        //
+        //var zeroIndexOfMask = [];
+        //var oneIndexOfMask = [];
+        //
+        //// Find the index position of 0 and 1 bit in the mask
+        //for (var i = 0; i < mask.length; i++) {
+        //    if (mask[i] == 0)
+        //        zeroIndexOfMask.push(i);
+        //    else
+        //        oneIndexOfMask.push(i);
+        //}
+        //
+        //var son = [];
+        //var daughter = [];
+        //
+        //// Should be done in a better way!!
+        //for (var i = 0; i < zeroIndexOfMask.length; i++) {
+        //    son[zeroIndexOfMask[i]] = mother[zeroIndexOfMask[i]];
+        //}
+        //
+        //for (var i = 0; i < oneIndexOfMask.length; i++) {
+        //    son[oneIndexOfMask[i]] = father[oneIndexOfMask[i]];
+        //}
+        //
+        //for (var i = 0; i < oneIndexOfMask.length; i++) {
+        //    daughter[oneIndexOfMask[i]] = mother[oneIndexOfMask[i]];
+        //}
+        //
+        //for (var i = 0; i < zeroIndexOfMask.length; i++) {
+        //    daughter[zeroIndexOfMask[i]] = father[zeroIndexOfMask[i]];
+        //}
+
         return [son, daughter];
     }
 
     genetic.OurFitnessFunction = function (chromosome) {
+
+        console.log("fitness ..... ");
 
         console.log("OurFitness chromosome: ", chromosome);
         var entity = chromosome;
@@ -425,8 +530,6 @@ var SMT = function () {
 
             console.log("isFinished result: ", result);
 
-            //d3.select("svg").remove();
-            //d3.select("#svgVisualize").selectAll("svg").remove();
             this.draw(result);
         }
     }
@@ -453,29 +556,10 @@ var SMT = function () {
         links.forEach(function (link) {
             link.source = nodes[link.source] ||
                 (nodes[link.source] = {name: link.source});
-            //console.log(link.source);
 
             link.target = nodes[link.target] ||
                 (nodes[link.target] = {name: link.target});
-            //console.log(link.target);
         });
-
-        //var g = document.getElementById("#svgVisualize"),
-        //    width = window.innerWidth,
-        //    height = window.innerHeight;
-        //
-        //var svg = d3.select("#svgVisualize").append("svg")
-        //    .attr("width", width)
-        //    .attr("height", height)
-        //    .append("g")
-        //
-        //function updateWindow() {
-        //    width = window.innerWidth;
-        //    height = window.innerHeight;
-        //    svg.attr("width", width).attr("height", height);
-        //}
-        //
-        //window.onresize = updateWindow;
 
         var width = window.innerWidth,
             height = window.innerHeight;
@@ -590,9 +674,7 @@ var SMT = function () {
         }
     }
 
-    /*
-     * Preprocess longest weight from SAM's algorithm
-     */
+    /* Pre-process longest weight from the tests data below */
 
     //test-1
     //var outputSMT = [[1, 2, 1], [3, 4, 1]];
@@ -601,29 +683,31 @@ var SMT = function () {
     //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
 
     //test-3
-    //var outputSMT = [[1,2,1],[3,4,1],[5,4,1],[2,3,1]];
+    //var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //test-4
-    //var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7]];
+    var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+        [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
+        [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
+        [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
+    ];
 
-    //test-4 Extension
-    //var outputSMT = [[5, 17, 5], [4, 17, 2], [3, 7, 5], [6, 7, 1], [2, 112, 7], [112, 111, 7], [1, 111, 7],
-    //    [14, 1, 2], [15, 14, 1], [39, 15, 7], [16, 39, 1], [4, 16, 7], [10, 3, 7], [23, 10, 2], [25, 23, 1],
-    //    [11, 25, 2], [12, 11, 7], [2, 12, 5]];
+    //test-5.1 -- SMT fails but SMT-Genetic works
+    //var outputSMT = [
+    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
+    //    ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+    //    ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]
+    //];
 
-    //test-5.1
-    var outputSMT = [["transitional sensory area", "medial superior temporal area", 2, "macaque"],
-        ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
-        ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
-        ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
-        ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
-        ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
-        ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-        ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-        ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
-        ["medial superior temporal area", "cortical area 46", 2, "macaque"]];
-
-    //test-5.2 commented "supplementary sensory area" in RequiredNodeList
+    //test-5.2 -- SMT fails but SMT-Genetic works
+    //Commented out "supplementary sensory area" in the RequiredNodeList
     //var outputSMT = [["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
     //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
     //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
@@ -678,6 +762,34 @@ var SMT = function () {
     //    ["visual area 1", "claustrum", 2, "macaque"],
     //    ["nucleus of the posterior commissure", "precommissural nucleus", 5, "Rat"],
     //    ["nucleus pulvinaris lateralis thalami", "nucleus of the posterior commissure", 2, "macaque"]];
+
+    //test-8 -- SMT and SMT-Genetic both works
+    //var outputSMT = [
+    //    ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
+    //    ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
+    //    ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
+    //    ["claustrum", "visual area 1", 2, "macaque"],
+    //    ["claustrum", "dorsomedial visual area", 2, "macaque"],
+    //    ["claustrum", "entorhinal cortex", 2, "macaque"],
+    //    ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["hippocampus", "nucleus medialis dorsalis thalami", 2, "macaque"],
+    //    ["pallium", "hippocampus", 7, "Birds"],
+    //    [ "pallium", "habenula", 7, "Birds" ],
+    //    ["visual area 1", "visual area 2", 2, "macaque"]
+    //];
+
+    //test-9 -- SMT and SMT-Genetic both works
+    //var outputSMT = [
+    //    [ "agranular area of temporal polar cortex", "orbitofrontal area 13", 2, "macaque" ],
+    //    [ "orbitofrontal area 13", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+    //    [ "nucleus pulvinaris lateralis thalami", "visual area 1", 2, "macaque" ],
+    //    [ "nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque" ],
+    //    [ "claustrum", "visual area 1", 2, "macaque" ],
+    //    [ "lateral geniculate body", "visual area 1", 1, "Homo sapiens" ],
+    //    [ "claustrum", "cortical areas 1 & 2", 2, "macaque" ],
+    //    [ "pontine gray", "flocculus", 5, "Rat" ],
+    //    [ "cortical areas 1 & 2", "pontine gray", 2, "macaque" ]
+    //];
 
     var LongestWeight;
     var FindMaxPathEdges = function () {
@@ -747,316 +859,308 @@ var SMT = function () {
         return MaxEdge;
     }
 
-    //LongestWeight = FindMaxPathEdges();
-    //console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+    LongestWeight = FindMaxPathEdges();
+    console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
-    /*
-     * Test cases
-     * */
+    /* Making Graph */
 
-    //test-1 (Extension of GA sheet in google drive)
+    //Test-1 test example in GA.jpg
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [3, 4, 1]];
 
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
-    //    [1, 15, 1, "Birds"], [15, 16, 1, "Rat"], [15, 11, 1, "Homo sapiens"], [11, 12, 1, "macaque"], [12, 9, 1, "Birds"],
-    //    [12, 13, 1, "Rat"], [13, 7, 1, "Homo sapiens"], [13, 14, 1, "macaque"], [14, 8, 1, "Birds"], [5, 25, 1, "Homo sapiens"],
-    //    [25, 24, 1, "Homo sapiens"], [5, 26, 1, "macaque"], [6, 28, 1, "Birds"], [6, 23, 1, "Rat"], [23, 27, 1, "Homo sapiens"],
-    //    [3, 4, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Homo sapiens"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
-    //    [33, 34, 1, "Birds"], [3, 10, 1, "Rat"], [10, 21, 1, "Homo sapiens"], [10, 17, 1, "macaque"], [17, 18, 1, "Birds"],
-    //    [18, 19, 1, "Rat"]];
+    //Test-2 test example in GA.jpg
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
 
-    //test-2 (Extension of GA sheet in google drive)
+    //Test-3 test example in GA.jpg
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 31, 1, "Rat"], [31, 32, 1, "Homo sapiens"], [1, 30, 1, "macaque"],
-    //    [1, 3, 1, "Birds"], [1, 15, 1, "Rat"], [15, 16, 1, "Homo sapiens"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
-    //    [12, 9, 1, "Rat"], [12, 13, 1, "Homo sapiens"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Rat"],
-    //    [5, 25, 1, "Homo sapiens"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Rat"], [6, 23, 1, "Homo sapiens"],
-    //    [23, 27, 1, "macaque"], [4, 35, 1, "Birds"], [4, 20, 1, "Rat"], [20, 22, 1, "Homo sapiens"], [4, 33, 1, "macaque"],
-    //    [33, 34, 1, "Birds"], [4, 5, 1, "Rat"], [5, 6, 1, "Homo sapiens"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
-    //    [10, 17, 1, "Rat"], [17, 18, 1, "Homo sapiens"], [18, 19, 1, "macaque"]];
-
-    //test-3 (Extension of GA sheet in google drive)
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35];
-    //var edges = [[1, 2, 1, "macaque"], [2, 29, 1, "Birds"], [2, 3, 1, "Rat"], [2, 31, 1, "Homo sapiens"], [31, 32, 1, "macaque"],
-    //    [1, 30, 1, "Birds"], [1, 15, 1, "Homo sapiens"], [15, 16, 1, "Rat"], [15, 11, 1, "macaque"], [11, 12, 1, "Birds"],
-    //    [12, 9, 1, "Homo sapiens"], [12, 13, 1, "Rat"], [13, 7, 1, "macaque"], [13, 14, 1, "Birds"], [14, 8, 1, "Homo sapiens"],
-    //    [5, 25, 1, "Rat"], [25, 24, 1, "macaque"], [5, 26, 1, "Birds"], [6, 28, 1, "Homo sapiens"], [6, 23, 1, "Rat"],
-    //    [23, 27, 1, "macaque"], [3, 4, 1, "Birds"], [4, 35, 1, "Homo sapiens"], [4, 20, 1, "Rat"], [20, 22, 1, "macaque"],
-    //    [4, 33, 1, "Birds"], [33, 34, 1, "Homo sapiens"], [4, 5, 1, "Rat"], [3, 10, 1, "macaque"], [10, 21, 1, "Birds"],
-    //    [10, 17, 1, "Homo sapiens"], [17, 18, 1, "Rat"], [18, 19, 1, "macaque"]];
-
-    //Test-4 between SMT and GA-SMT
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
-    //    [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
-    //    [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
-    //    [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
-    //    [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
-    //    [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-    //    [20, 21, 7, "Birds"]];
-
-    //Test-4 Extension
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 2, 21, "Birds"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [1, 14, 2, "macaque"], [32, 31, 5, "Rat"], [31, 6, 7, "Birds"],
-    //    [6, 7, 1, "Homo sapiens"], [14, 28, 5, "Rat"], [39, 15, 7, "Birds"], [1, 111, 7, "Birds"], [15, 14, 1, "Homo sapiens"],
-    //    [37, 41, 2, "macaque"], [41, 47, 5, "Rat"], [1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"],
-    //    [26, 12, 2, "macaque"], [112, 2, 7, "Birds"], [12, 2, 5, "Rat"], [8, 9, 5, "Rat"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //    [12, 11, 7, "Birds"], [11, 25, 2, "macaque"], [11, 24, 5, "Rat"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"], [5, 17, 5, "Rat"],
-    //    [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"], [37, 40, 2, "macaque"], [40, 45, 5, "Rat"],
-    //    [40, 46, 7, "Birds"], [112, 111, 7, "Birds"], [41, 42, 7, "Birds"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [44, 50, 7, "Birds"],
-    //    [30, 34, 2, "macaque"], [34, 35, 5, "Rat"], [35, 36, 7, "Birds"], [33, 32, 2, "macaque"], [7, 3, 5, "Rat"], [19, 20, 5, "Rat"],
-    //    [20, 21, 7, "Birds"],
-    //    [39, 16, 1, "Homo sapiens"], [45, 48, 1, "Homo sapiens"], [49, 44, 1, "Homo sapiens"], [44, 35, 1, "Homo sapiens"],
-    //    [34, 31, 1, "Homo sapiens"], [9, 21, 1, "Homo sapiens"], [23, 25, 1, "Homo sapiens"]];
-
-    //Test- complete_graph
-    var nodes = [1, 2, 3, 4, 5];
-    var edges = [[1, 2, 2], [1, 3, 2], [1, 4, 2], [1, 5, 2], [2, 1, 2], [2, 3, 2], [2, 4, 2], [2, 5, 2],
-        [3, 1, 2], [3, 2, 2], [3, 4, 2], [3, 5, 2], [4, 1, 2], [4, 2, 2], [4, 3, 2], [4, 5, 2],
-        [5, 1, 2], [5, 2, 2], [5, 3, 2], [5, 4, 2]];
-
-    //var nodes = [1, 2, 3, 4, 5, 6, 7];
-    //var edges = [[1, 2, 2], [1, 3, 2], [1, 4, 2], [1, 5, 2], [1, 6, 2], [1, 7, 2], [2, 1, 2], [2, 3, 2], [2, 4, 2],
-    //    [2, 5, 2], [2, 6, 2], [2, 7, 2], [3, 1, 2], [3, 2, 2], [3, 4, 2], [3, 5, 2], [3, 6, 2], [3, 7, 2], [4, 1, 2],
-    //    [4, 2, 2], [4, 3, 2], [4, 5, 2], [4, 6, 2], [4, 7, 2], [5, 1, 2], [5, 2, 2], [5, 3, 2], [5, 4, 2], [5, 6, 2],
-    //    [5, 7, 2], [6, 1, 2], [6, 2, 2], [6, 3, 2], [6, 4, 2], [6, 5, 2], [6, 7, 2], [7, 1, 2], [7, 2, 2], [7, 3, 2],
-    //    [7, 4, 2], [7, 5, 2], [7, 6, 2]];
+    //Test-4 test example for 50 node
+    var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
+    var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
+        [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
+        [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
+        [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
+        [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
+        [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
+        [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
+        [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
+        [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
+        [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
+        [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
+    ];
 
     //test-5 (Getting nodes and edges from data.json)
+    //var nodes = [];
+    //var edges = [];
+    //
+    //d3.json("data.json", function (data) {
+    //
+    //    for (var i = 0; i < data["nodes"].length; i++) {
+    //        nodes[i] = data["nodes"][i];
+    //    }
+    //
+    //    for (var j = 0; j < data["edges"].length; j++) {
+    //        edges.push([]);
+    //        edges[j].push(new Array(4));
+    //        for (var k = 0; k < 4; k++) {
+    //            if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+    //                edges[j][3] = "macaque";
+    //            }
+    //            else if (data["edges"][j][3] == "rattus norvegicus") {
+    //                edges[j][3] = "Rat";
+    //            }
+    //            else {
+    //                edges[j][k] = data["edges"][j][k];
+    //            }
+    //        }
+    //    }
 
-    var nodes = [];
-    var edges = [];
+    /*
+     * Configuration parameters
+     * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
+     * @size: Population size, Default - 250, Type - Real Number
+     * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
+     * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
+     * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
+     * Default - 0, Type - Real Number
+     *
+     * (WE MAY USE THESE IN FUTURE)
+     * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
+     * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
+     * Type - Real Number
+     */
 
-    d3.json("data.json", function (data) {
+    var config = {
+        "iterations": 100
+        , "size": 250
+        , "crossover": 0.9
+        , "mutation": 0.2
+        , "skip": 0
+        , "webWorkers": false
+        , "fittestAlwaysSurvives": true
+    };
 
-        for (var i = 0; i < data["nodes"].length; i++) {
-            nodes[i] = data["nodes"][i];
+    var graphDFS = new Graph();
+
+    for (var i = 0; i < edges.length; i++) {
+        graphDFS.createEdge(edges[i][0], edges[i][1], edges[i][2], edges[i][3]);
+        graphDFS.createEdge(edges[i][1], edges[i][0], edges[i][2], edges[i][3]);
+    }
+
+    function FilterRequiredNodeList(RequiredNode) {
+        for (var i = 0; i < RequiredNodeList2.length; i++) {
+            if (RequiredNode == RequiredNodeList2[i])
+                return true;
         }
 
-        for (var j = 0; j < data["edges"].length; j++) {
-            edges.push([]);
-            edges[j].push(new Array(4));
-            for (var k = 0; k < 4; k++) {
-                if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
-                    edges[j][3] = "macaque";
-                }
-                else if (data["edges"][j][3] == "rattus norvegicus") {
-                    edges[j][3] = "Rat";
-                }
-                else {
-                    edges[j][k] = data["edges"][j][k];
-                }
-            }
+        return false;
+    }
+
+    console.log("Before DFS: ", graphDFS);
+
+    /*
+     * DFS Implementation to traverse from all required nodes
+     */
+    var visited = [];
+    var NodeList = [];
+    var EdgeToList = [];
+    var DFSEdgeList = [];
+    var PathToWeight = [];
+    var EdgeToPath = [];
+    var graphFilter = new Graph();
+    var e1, e2, value;
+    var hasReverseEdge;
+
+    function dfs(graph, from, counter, LongestWeight) {
+
+        if (counter == 0) {
+            console.log("Initialization");
+            EdgeToList[from] = [];
+            PathToWeight[from] = 0;
+
+            EdgeToPath[from] = [from];
+            DFSEdgeList = [];
         }
 
-        /*
-         * Configuration parameters
-         * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
-         * @size: Population size, Default - 250, Type - Real Number
-         * @crossover: Probability of crossover, Default - 0.9, Range - [0.0, 1.0]
-         * @mutation: Probability of mutation, Default - 0.2, Range - [0.0, 1.0]
-         * @skip: Setting this higher throttles back how frequently genetic.notification gets called in the main thread,
-         * Default - 0, Type - Real Number
-         *
-         * (WE MAY USE THESE IN FUTURE)
-         * @fittestAlwaysSurvives: Prevents losing the best fit between generations, Default - true, Type - Boolean
-         * @maxResults: The maximum number of best fit results that webworkers will send per notification, Default - 100,
-         * Type - Real Number
-         */
+        counter++;
+        visited[from] = true;
+        NodeList.push(from);
 
-        var config = {
-            "iterations": 100
-            , "size": 250
-            , "crossover": 0.9
-            , "mutation": 0.2
-            , "skip": 0
-            , "webWorkers": false
-            , "fittestAlwaysSurvives": true
-        };
+        for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
+            var to = kv.value[0],
+                vertexValue = kv.value[1],
+                edgeValue = kv.value[2];
 
-        var graphDFS = new Graph();
+            if (!visited[to]) {
+                if (PathToWeight[from] + edgeValue <= LongestWeight) {
 
-        for (var i = 0; i < edges.length; i++) {
-            graphDFS.createEdge(edges[i][0], edges[i][1], edges[i][2], edges[i][3]);
-            graphDFS.createEdge(edges[i][1], edges[i][0], edges[i][2], edges[i][3]);
-        }
+                    PathToWeight[to] = PathToWeight[from] + edgeValue;
+                    EdgeToList[to] = EdgeToList[from].concat([from, to, edgeValue]);
 
-        function FilterRequiredNodeList(RequiredNode) {
-            for (var i = 0; i < RequiredNodeList.length; i++) {
-                if (RequiredNode == RequiredNodeList[i])
-                    return true;
-            }
+                    EdgeToPath[to] = EdgeToPath[from].concat([to]);
 
-            return false;
-        }
+                    if (FilterRequiredNodeList(to)) {
+                        hasReverseEdge = false;
 
-        console.log("Before DFS: ", graphDFS);
+                        for (var i = 0; i < EdgeToList[to].length; i++) {
+                            e1 = EdgeToList[to][i];
+                            e2 = EdgeToList[to][++i];
+                            value = EdgeToList[to][++i];
 
-        /*
-         * DFS Implementation to traverse from all required nodes
-         */
-        var visited = [];
-        var NodeList = [];
-        var EdgeToList = [];
-        var DFSEdgeList = [];
-        var PathToWeight = [];
-        var EdgeToPath = [];
-
-        function dfs(graph, from, counter, LongestWeight) {
-
-            if (counter == 0) {
-                console.log("Initialization");
-                EdgeToList[from] = [];
-                PathToWeight[from] = 0;
-
-                EdgeToPath[from] = [from];
-                DFSEdgeList = [];
-            }
-
-            counter++;
-            visited[from] = true;
-            NodeList.push(from);
-
-            for (var it = graph.verticesFrom(from), kv; !(kv = it.next()).done;) {
-                var to = kv.value[0],
-                    vertexValue = kv.value[1],
-                    edgeValue = kv.value[2];
-
-                if (!visited[to]) {
-                    if (PathToWeight[from] + edgeValue <= LongestWeight) {
-                        //console.log(from, to);
-
-                        PathToWeight[to] = PathToWeight[from] + edgeValue;
-                        EdgeToList[to] = EdgeToList[from].concat([from, to, edgeValue]);
-
-                        EdgeToPath[to] = EdgeToPath[from].concat([to]);
-
-                        if (FilterRequiredNodeList(to)) {
-                            for (var i = 0; i < EdgeToList[to].length; i++) {
-                                DFSEdgeList.push([EdgeToList[to][i], EdgeToList[to][++i], EdgeToList[to][++i]]);
+                            if (graphFilter.hasEdge(e2, e1)) {
+                                hasReverseEdge = true;
+                                break;
                             }
 
-                            //console.log(EdgeToPath[to]);
-                            paths.push(EdgeToPath[to]);
+                            if (graphFilter.hasEdge(e1, e2)) {
+                                continue;
+                            }
+
+                            graphFilter.createEdge(e1, e2, value);
+
+                            DFSEdgeList.push([e1, e2, value]);
                         }
 
-                        dfs(graph, to, counter, LongestWeight);
+                        if (!hasReverseEdge) {
+                            console.log(EdgeToPath[to]);
+                            paths.push(EdgeToPath[to]);
+                        }
                     }
-                }
-            }
 
-            visited[from] = false;
-            return DFSEdgeList;
-        }
-
-        var EdgeList = [];
-        var temp = [];
-        var c = 0;
-        for (var m = 0; m < RequiredNodeList.length; m++) {
-            console.log("RequiredNode: ", RequiredNodeList[m]);
-
-            temp = dfs(graphDFS, RequiredNodeList[m], 0, 10);
-
-            console.log("RequiredNode # of Edges: ", temp.length);
-            //for (var n = 0; n < temp.length; n++)
-            //    console.log(temp[n]);
-
-            //var g = new Graph();
-            //for (var i = 0; i < temp.length; i++) {
-            //    g.createEdge(temp[i][0], temp[i][1], temp[i][2]);
-            //    g.createEdge(temp[i][1], temp[i][0], temp[i][2]);
-            //}
-            //console.log(g);
-
-            EdgeList = EdgeList.concat(temp);
-
-            c++;
-        }
-
-        console.log("counter: ", c);
-
-        /*
-         * Utility function for removing non-unique edges from our solution
-         */
-        function uniqueify(es) {
-            var retval = [];
-            es.forEach(function (e) {
-                for (var j = 0; j < retval.length; j++) {
-                    if ((retval[j][0] === e[0] && retval[j][1] === e[1]) || (retval[j][1] === e[0] && retval[j][0] === e[1]))
-                        return;
-                }
-                retval.push(e);
-            });
-            return retval;
-        }
-
-        EdgeList = uniqueify(EdgeList);
-
-        /*
-         * adding weight and species from the original dataset into our EdgeList
-         */
-        for (var i = 0; i < EdgeList.length; i++) {
-            for (var j = 0; j < edges.length; j++) {
-                if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1])) {
-                    EdgeList[i][2] = edges[j][2];
-                    EdgeList[i][3] = edges[j][3];
+                    dfs(graph, to, counter, LongestWeight);
                 }
             }
         }
 
-        for (var i = 0; i < EdgeList.length; i++)
-            console.log("EdgeList: ", EdgeList[i]);
+        visited[from] = false;
+        return DFSEdgeList;
+    }
 
-        console.log("TotalEdgeList: ", EdgeList.length);
+    var EdgeList = [];
+    var temp = [];
+    var c = 0;
+    for (var m = 0; m < RequiredNodeList.length; m++) {
+        console.log("RequiredNode: ", RequiredNodeList[m]);
 
-        var graphEdgeList = new Graph();
-        for (var i = 0; i < EdgeList.length; i++) {
-            graphEdgeList.createEdge(EdgeList[i][0], EdgeList[i][1], EdgeList[i][2]);
-            graphEdgeList.createEdge(EdgeList[i][1], EdgeList[i][0], EdgeList[i][2]);
+        temp = dfs(graphDFS, RequiredNodeList[m], 0, LongestWeight);
+
+        console.log("Required # of Paths: ", paths.length);
+        console.log("Required # of Edges: ", temp.length);
+
+        EdgeList = EdgeList.concat(temp);
+
+        c++;
+    }
+
+    console.log("counter: ", c);
+    console.log("paths: ", paths.length);
+
+    /*
+     * Utility function for removing non-unique edges from our solution
+     */
+    function uniqueify(es) {
+        var retval = [];
+        es.forEach(function (e) {
+            for (var j = 0; j < retval.length; j++) {
+                if ((retval[j][0] === e[0] && retval[j][1] === e[1]) || (retval[j][1] === e[0] && retval[j][0] === e[1]))
+                    return;
+            }
+            retval.push(e);
+        });
+        return retval;
+    }
+
+    EdgeList = uniqueify(EdgeList);
+
+    /*
+     * adding weight and species from the original dataset into our EdgeList
+     */
+    for (var i = 0; i < EdgeList.length; i++) {
+        for (var j = 0; j < edges.length; j++) {
+            if ((EdgeList[i][0] == edges[j][0] && EdgeList[i][1] == edges[j][1]) || (EdgeList[i][1] == edges[j][0] && EdgeList[i][0] == edges[j][1])) {
+                EdgeList[i][2] = edges[j][2];
+                EdgeList[i][3] = edges[j][3];
+            }
         }
+    }
 
-        console.log("graphEdgeList: ", graphEdgeList);
+    for (var i = 0; i < EdgeList.length; i++)
+        console.log("EdgeList: ", EdgeList[i]);
 
-        /*
-         * Initial GA input
-         */
-        var userData = {
-            "nodes": nodes,
-            "edges": EdgeList
-        };
+    console.log("TotalEdgeList: ", EdgeList.length);
 
-        /*
-         * GA starts beyond this point
-         * measure execution time
-         */
-        var start = new Date().getTime();
+    var graphEdgeList = new Graph();
+    for (var i = 0; i < EdgeList.length; i++) {
+        graphEdgeList.createEdge(EdgeList[i][0], EdgeList[i][1], EdgeList[i][2]);
+        graphEdgeList.createEdge(EdgeList[i][1], EdgeList[i][0], EdgeList[i][2]);
+    }
 
-        //genetic.evolve(config, userData);
+    console.log("graphEdgeList: ", graphEdgeList);
 
-        var end = new Date().getTime();
+    /*
+     * Initial GA input
+     */
+    var userData = {
+        "nodes": nodes,
+        "edges": EdgeList
+    };
 
-        /*
-         * Only measure execution time of GA. Skip execution
-         * of Draw function from genetic.notification. Fix this!!
-         */
-        console.log("Execution Time: ", end - start);
+    /*
+     * Graph dataset generation
+     * */
 
-        d3.select("#svgVisualize").append("text")
-            .attr("stroke", "black")
-            .attr("x", 10)
-            .attr("y", 110)
-            .style("font", "14px sans-serif")
-            .text(end - start + " milliseconds");
-    });
+    //for(var i = 0; i < nodes.length; i++)
+    //console.log(nodes.length);
+
+    //for (var i = 0; i < edges.length; i++)
+    //console.log(edges.length);
+
+    //var max = 1;
+    //var min = 1;
+    //var sum = 0;
+    //for (var it = graphEdgeList.vertices(), kv; !(kv = it.next()).done;) {
+    //    var key   = kv.value[0],
+    //        value = kv.value[1];
+    //    // iterates over all vertices of the graph
+    //
+    //    if(graphEdgeList.outDegree(key) >= max)
+    //        max = graphEdgeList.outDegree(key);
+    //
+    //    if(graphEdgeList.outDegree(key) <= min)
+    //        min = graphEdgeList.outDegree(key);
+    //
+    //    sum = sum + graphEdgeList.outDegree(key);
+    //}
+    //
+    //console.log("min: " + min + " avg: " + sum/graphEdgeList.vertexCount() + " max: " + max);
+    //
+    //console.log("vertexCount: " + graphEdgeList.vertexCount());
+    //console.log("edgeCount: " + graphEdgeList.edgeCount());
+
+    /*
+     * GA starts beyond this point
+     * measure execution time
+     */
+    var start = new Date().getTime();
+
+    genetic.evolve(config, userData);
+
+    var end = new Date().getTime();
+
+    /*
+     * Only measure execution time of GA. Skip execution
+     * of Draw function from genetic.notification. Fix this!!
+     */
+    console.log("Execution Time: ", end - start);
+
+    d3.select("#svgVisualize").append("text")
+        .attr("stroke", "black")
+        .attr("x", 10)
+        .attr("y", 110)
+        .style("font", "14px sans-serif")
+        .text(end - start + " milliseconds");
+    //});
 }();
