@@ -989,7 +989,7 @@ var SMT = function () {
         for (var m = 0; m < RequiredNodeList.length; m++) {
             console.log("RequiredNode: ", RequiredNodeList[m]);
 
-            temp = dfs(graphDFS, RequiredNodeList[m], 0, 7); // 8 is the maximum weight between two required node
+            temp = dfs(graphDFS, RequiredNodeList[m], 0, 8); // 8 is the maximum weight between two required node
 
             console.log("Required # of Paths: ", paths.length);
             console.log("Required # of Edges: ", temp.length);
