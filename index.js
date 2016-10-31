@@ -662,10 +662,10 @@ var SMT = function () {
     //var outputSMT = [[1, 2, 1], [3, 4, 1]];
 
     //Test-2 test example in GA.jpg
-    var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
+    //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
 
     //Test-3 test example in GA.jpg
-    //var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
+    var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //Test-4 test example for 50 node
     //var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
@@ -851,12 +851,12 @@ var SMT = function () {
     //var edges = [[1, 2, 1], [3, 4, 1]];
 
     //Test-2 test example in GA.jpg
-    var nodes = [1, 2, 3, 4, 5, 6];
-    var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
+    //var nodes = [1, 2, 3, 4, 5, 6];
+    //var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
 
     //Test-3 test example in GA.jpg
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
+    var nodes = [1, 2, 3, 4, 5, 6];
+    var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
     //Test-4 test example for 50 node
     //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
