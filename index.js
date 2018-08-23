@@ -6,27 +6,29 @@
 var TempList = [];
 var paths = [];
 
-/* Test 1, 2, 3, and 4 (50 node example) */
-//var RequiredNodeList = [1, 2, 3, 4, 5, 6];
-//var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
-
-/* Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png) */
+/* Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
+ * Works for mutation 0.3, crossover 0.9, iteration 100, size 250
+ * Uncomment Test-5 outputSMT
+ */
 var RequiredNodeList = [
-   "transitional sensory area",
-   "supplementary sensory area",
-   "ventroposterior superior nucleus thalami",
-   "receptive field for the foot in area5",
-   "globus pallidus internal part"
+    "transitional sensory area",
+    "supplementary sensory area",
+    "ventroposterior superior nucleus thalami",
+    "receptive field for the foot in area5",
+    "globus pallidus internal part"
 ];
 var RequiredNodeList2 = [
-   "transitional sensory area",
-   "supplementary sensory area",
-   "ventroposterior superior nucleus thalami",
-   "receptive field for the foot in area5",
-   "globus pallidus internal part"
+    "transitional sensory area",
+    "supplementary sensory area",
+    "ventroposterior superior nucleus thalami",
+    "receptive field for the foot in area5",
+    "globus pallidus internal part"
 ];
 
-/* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png) */
+/* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
+* Works for mutation 0.2, crossover 0.9, iteration 100, size 250
+* Uncomment Test-6 outputSMT
+*/
 // var RequiredNodeList = [
 //    "transitional sensory area",
 //    "ventroposterior superior nucleus thalami",
@@ -40,7 +42,10 @@ var RequiredNodeList2 = [
 //    "globus pallidus internal part"
 // ];
 
-/* Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png) */
+/* Test-7 SMT and SMT-Genetic both works (SMT-Works-1.png)
+* Works for mutation 0.2, crossover 0.9, iteration 100, size 250
+* Uncomment Test-7 outputSMT
+*/
 // var RequiredNodeList = [
 //     "precommissural nucleus",
 //     "nucleus of the posterior commissure",
@@ -60,7 +65,10 @@ var RequiredNodeList2 = [
 //     "habenula"
 // ];
 
-/* Test-7.2 SMT and SMT-Genetic both works (SMT-Fails-3.png) */
+/* Test-7.2 SMT and SMT-Genetic both works (SMT-Fails-3.png)
+* Works for mutation 0.5, crossover 0.9, iteration 100, size 250
+* Comment out all outputSMT and LongestWeight
+* */
 // var RequiredNodeList = [
 //     "subiculum",
 //     "cortical area 3a",
@@ -76,7 +84,10 @@ var RequiredNodeList2 = [
 //     "hypothalamus"
 // ];
 
-/* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
+/* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png)
+* Works for mutation 0.2, crossover 0.9, iteration 100, size 250
+* Uncomment Test-8 outputSMT
+*/
 // var RequiredNodeList = [
 //    "agranular area of temporal polar cortex",
 //    "nucleus of the posterior commissure",
@@ -280,54 +291,6 @@ var SMT = function () {
 
         var son = father.slice(0, ca).concat(mother.slice(ca, cb)).concat(father.slice(cb));
         var daughter = mother.slice(0, ca).concat(father.slice(ca, cb)).concat(mother.slice(cb));
-
-        /*
-         * Uniform crossover
-         * https://en.wikipedia.org/wiki/Crossover_(genetic_algorithm)#Uniform_crossover_and_half_uniform_crossover
-         */
-        //var len = mother.length;
-        //var mask = [];
-        //
-        ///* A random mask is generated. The mask determines which bits
-        // * are copied from one parent and which from the other parent
-        // */
-        //for (var i = 0; i < len; i++) {
-        //    if (Math.floor(Math.random() * len) % 2 == 0)
-        //        mask.push(1);
-        //    else
-        //        mask.push(0);
-        //}
-        //
-        //var zeroIndexOfMask = [];
-        //var oneIndexOfMask = [];
-        //
-        //// Find the index position of 0 and 1 bit in the mask
-        //for (var i = 0; i < mask.length; i++) {
-        //    if (mask[i] == 0)
-        //        zeroIndexOfMask.push(i);
-        //    else
-        //        oneIndexOfMask.push(i);
-        //}
-        //
-        //var son = [];
-        //var daughter = [];
-        //
-        //// Should be done in a better way!!
-        //for (var i = 0; i < zeroIndexOfMask.length; i++) {
-        //    son[zeroIndexOfMask[i]] = mother[zeroIndexOfMask[i]];
-        //}
-        //
-        //for (var i = 0; i < oneIndexOfMask.length; i++) {
-        //    son[oneIndexOfMask[i]] = father[oneIndexOfMask[i]];
-        //}
-        //
-        //for (var i = 0; i < oneIndexOfMask.length; i++) {
-        //    daughter[oneIndexOfMask[i]] = mother[oneIndexOfMask[i]];
-        //}
-        //
-        //for (var i = 0; i < zeroIndexOfMask.length; i++) {
-        //    daughter[zeroIndexOfMask[i]] = father[zeroIndexOfMask[i]];
-        //}
 
         return [son, daughter];
     }
@@ -677,35 +640,19 @@ var SMT = function () {
 
     /* Pre-process longest weight from the tests data below */
 
-    //Test-1 test example in GA.jpg
-    //var outputSMT = [[1, 2, 1], [3, 4, 1]];
-
-    //Test-2 test example in GA.jpg
-    //var outputSMT = [[1, 2, 1], [3, 1, 1], [5, 6, 1], [4, 5, 1]];
-
-    //Test-3 test example in GA.jpg
-    // var outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
-
-    //Test-4 test example for 50 node
-    //var outputSMT = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-    //   [1, 14, 2, "macaque"], [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"],
-    //   [4, 17, 2, "macaque"], [17, 5, 5, "Rat"], [6, 7, 1, "Homo sapiens"], [7, 3, 5, "Rat"], [3, 10, 7, "Birds"],
-    //   [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
-    //];
-
-    // Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
-    // var outputSMT = [
-    //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
-    //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
-    //    ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
-    //    ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
-    //    ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
-    //    ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //    ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-    //    ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
-    //    ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
-    //    ["medial superior temporal area", "cortical area 46", 2, "macaque"]
-    // ];
+    //Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
+    var outputSMT = [
+        ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
+        ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
+        ["receptive field for the foot in area5", "nucleus lateralis posterior thalami", 2, "macaque"],
+        ["nucleus lateralis posterior thalami", "area 5", 2, "macaque"],
+        ["ventroposterior superior nucleus thalami", "area 5", 2, "macaque"],
+        ["globus pallidus internal part", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        ["nucleus medialis dorsalis thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+        ["nucleus lateralis posterior thalami", "subarea of dorsal premotor cortex", 2, "macaque"],
+        ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        ["medial superior temporal area", "cortical area 46", 2, "macaque"]
+    ];
 
     // Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
     // Commented out "supplementary sensory area" in the RequiredNodeList
@@ -816,67 +763,38 @@ var SMT = function () {
         return MaxEdge;
     }
 
-    // LongestWeight = FindMaxPathEdges();
-    // console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+    LongestWeight = FindMaxPathEdges();
+    console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
     /* Making Graph */
 
-    //Test-1 test example in GA.jpg
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [3, 4, 1]];
-
-    //Test-2 test example in GA.jpg
-    //var nodes = [1, 2, 3, 4, 5, 6];
-    //var edges = [[1, 2, 1], [2, 3, 1], [4, 5, 1], [5, 6, 1]];
-
-    //Test-3 test example in GA.jpg
-    // var nodes = [1, 2, 3, 4, 5, 6];
-    // var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
-
-    //Test-4 test example for 50 node
-    //var nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    //   30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 111, 112];
-    //var edges = [[1, 13, 1, "Homo sapiens"], [13, 27, 5, "Rat"], [27, 26, 7, "Birds"], [26, 12, 2, "macaque"], [12, 2, 5, "Rat"],
-    //   [1, 111, 7, "Birds"], [111, 112, 7, "Birds"], [112, 2, 7, "Birds"], [1, 14, 2, "macaque"], [14, 28, 5, "Rat"],
-    //   [14, 15, 1, "Homo sapiens"], [15, 39, 7, "Birds"], [39, 16, 1, "Homo sapiens"], [16, 4, 7, "Birds"], [4, 17, 2, "macaque"],
-    //   [17, 5, 5, "Rat"], [17, 18, 7, "Birds"], [17, 29, 2, "macaque"], [29, 38, 5, "Rat"], [29, 37, 7, "Birds"],
-    //   [37, 40, 2, "macaque"], [37, 41, 2, "macaque"], [41, 42, 7, "Birds"], [41, 47, 5, "Rat"], [40, 46, 7, "Birds"],
-    //   [40, 45, 5, "Rat"], [45, 48, 1, "Homo sapiens"], [48, 49, 2, "macaque"], [49, 43, 5, "Rat"], [49, 44, 1, "Homo sapiens"],
-    //   [44, 50, 7, "Birds"], [44, 35, 1, "Homo sapiens"], [35, 36, 7, "Birds"], [35, 34, 5, "Rat"], [34, 30, 2, "macaque"],
-    //   [34, 31, 1, "Homo sapiens"], [31, 32, 5, "Rat"], [32, 33, 2, "macaque"], [31, 6, 7, "Birds"], [6, 7, 1, "Homo sapiens"],
-    //   [7, 3, 5, "Rat"], [3, 10, 7, "Birds"], [10, 23, 2, "macaque"], [23, 22, 7, "Birds"], [22, 21, 2, "macaque"],
-    //   [21, 9, 1, "Homo sapiens"], [9, 8, 5, "Rat"], [21, 20, 7, "Birds"], [20, 19, 5, "Rat"], [23, 25, 1, "Homo sapiens"],
-    //   [25, 11, 2, "macaque"], [11, 24, 5, "Rat"], [11, 12, 7, "Birds"]
-    //];
-
     //test-5 (Getting nodes and edges from data.json)
-     var nodes = [];
-     var edges = [];
+    var nodes = [];
+    var edges = [];
 
-     d3.json("data.json", function (data) {
+    d3.json("data.json", function (data) {
 
-         for (var i = 0; i < data["nodes"].length; i++) {
-             nodes[i] = data["nodes"][i];
-         }
+        for (var i = 0; i < data["nodes"].length; i++) {
+            nodes[i] = data["nodes"][i];
+        }
 
-         for (var j = 0; j < data["edges"].length; j++) {
-             edges.push([]);
-             edges[j].push(new Array(4));
-             for (var k = 0; k < 4; k++) {
-                 if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
-                     edges[j][3] = "macaque";
-                 }
-                 else if (data["edges"][j][3] == "rattus norvegicus") {
-                     edges[j][3] = "Rat";
-                 }
-                 else {
-                     edges[j][k] = data["edges"][j][k];
-                 }
-             }
-         }
+        for (var j = 0; j < data["edges"].length; j++) {
+            edges.push([]);
+            edges[j].push(new Array(4));
+            for (var k = 0; k < 4; k++) {
+                if (data["edges"][j][3] === "macaca mulatta" || data["edges"][j][3] === "macaca fuscata") {
+                    edges[j][3] = "macaque";
+                }
+                else if (data["edges"][j][3] == "rattus norvegicus") {
+                    edges[j][3] = "Rat";
+                }
+                else {
+                    edges[j][k] = data["edges"][j][k];
+                }
+            }
+        }
 
-
-         /*
+        /*
          * Configuration parameters
          * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
          * @size: Population size, Default - 250, Type - Real Number
@@ -895,7 +813,7 @@ var SMT = function () {
             "iterations": 100
             , "size": 250
             , "crossover": 0.9
-            , "mutation": 0.2
+            , "mutation": 0.5
             , "skip": 0
             , "webWorkers": false
             , "fittestAlwaysSurvives": true
@@ -1003,7 +921,7 @@ var SMT = function () {
         for (var m = 0; m < RequiredNodeList.length; m++) {
             console.log("RequiredNode: ", RequiredNodeList[m]);
 
-            temp = dfs(graphDFS, RequiredNodeList[m], 0, 7);
+            temp = dfs(graphDFS, RequiredNodeList[m], 0, 8); // 8 is the maximum weight between two required node
 
             console.log("Required # of Paths: ", paths.length);
             console.log("Required # of Edges: ", temp.length);
@@ -1120,5 +1038,5 @@ var SMT = function () {
             .attr("y", 110)
             .style("font", "14px sans-serif")
             .text(end - start + " milliseconds");
-     });
+    });
 }();
