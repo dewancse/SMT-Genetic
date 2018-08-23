@@ -11,20 +11,20 @@ var paths = [];
 //var RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
 
 /* Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png) */
-// var RequiredNodeList = [
-//    "transitional sensory area",
-//    "supplementary sensory area",
-//    "ventroposterior superior nucleus thalami",
-//    "receptive field for the foot in area5",
-//    "globus pallidus internal part"
-// ];
-// var RequiredNodeList2 = [
-//    "transitional sensory area",
-//    "supplementary sensory area",
-//    "ventroposterior superior nucleus thalami",
-//    "receptive field for the foot in area5",
-//    "globus pallidus internal part"
-// ];
+var RequiredNodeList = [
+   "transitional sensory area",
+   "supplementary sensory area",
+   "ventroposterior superior nucleus thalami",
+   "receptive field for the foot in area5",
+   "globus pallidus internal part"
+];
+var RequiredNodeList2 = [
+   "transitional sensory area",
+   "supplementary sensory area",
+   "ventroposterior superior nucleus thalami",
+   "receptive field for the foot in area5",
+   "globus pallidus internal part"
+];
 
 /* Test-6 SMT fails but SMT-Genetic works (SMT-Fails-2.png) */
 // var RequiredNodeList = [
@@ -61,20 +61,20 @@ var paths = [];
 // ];
 
 /* Test-7.2 SMT and SMT-Genetic both works (SMT-Fails-3.png) */
-var RequiredNodeList = [
-    "subiculum",
-    "cortical area 3a",
-    "pallium",
-    "hippocampus",
-    "hypothalamus"
-];
-var RequiredNodeList2 = [
-    "subiculum",
-    "cortical area 3a",
-    "pallium",
-    "hippocampus",
-    "hypothalamus"
-];
+// var RequiredNodeList = [
+//     "subiculum",
+//     "cortical area 3a",
+//     "pallium",
+//     "hippocampus",
+//     "hypothalamus"
+// ];
+// var RequiredNodeList2 = [
+//     "subiculum",
+//     "cortical area 3a",
+//     "pallium",
+//     "hippocampus",
+//     "hypothalamus"
+// ];
 
 /* Test-8 SMT and SMT-Genetic both works (SMT-Works-2.png) */
 // var RequiredNodeList = [
@@ -693,7 +693,7 @@ var SMT = function () {
     //   [10, 23, 2, "macaque"], [23, 25, 1, "Homo sapiens"], [25, 11, 2, "macaque"], [11, 12, 7, "Birds"]
     //];
 
-    //Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
+    // Test-5 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
     // var outputSMT = [
     //    ["transitional sensory area", "medial superior temporal area", 2, "macaque"],
     //    ["supplementary sensory area", "medial superior temporal area", 2, "macaque"],
@@ -816,8 +816,8 @@ var SMT = function () {
         return MaxEdge;
     }
 
-    //LongestWeight = FindMaxPathEdges();
-    //console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+    // LongestWeight = FindMaxPathEdges();
+    // console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
     /* Making Graph */
 
