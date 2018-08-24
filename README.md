@@ -8,7 +8,7 @@ Please do the following steps to install the SMT-Genetic in your workspace:
 - `npm install` to install packages
 - Open `index.html` home page in the browser
 
-### SMT-Neurophysiology workflow
+### SMT-Genetic workflow
 This tool consists of two panel: `left panel` shows some brain regions and `right panel` visualizes a given set of brain regions. The user will select some brain regions of interest on the `left panel` and the `right panel` will show the connectivity of the selected brain regions.
 <center><img src=images/SMTVisualization.png /></center>
 
@@ -25,6 +25,7 @@ The application is accessible by navigating::
 We will implement Unit testing and Functional testing to make sure the code is functioning as expected.
 
 ### List of contributors
+- Syed Islam
 - Dewan Sarwar
 
 ### Acknowledgements
