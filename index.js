@@ -944,30 +944,6 @@ var SMTGenetic = (function (global) {
                 }
             }
 
-            var tempArr = [];
-            for (var i = 0; i < edges.length; i++) {
-                tempArr.push(edges[i][0]);
-                tempArr.push(edges[i][1]);
-            }
-
-            var uniqueifyTempArray = function (es) {
-                var retval = [];
-                es.forEach(function (e) {
-                    for (var j = 0; j < retval.length; j++) {
-                        if (retval[j] === e)
-                            return;
-                    }
-                    retval.push(e);
-                });
-                return retval;
-            };
-
-            tempArr = uniqueifyTempArray(tempArr);
-            nodes = uniqueifyTempArray(nodes);
-
-            console.log("nodes: ", nodes.length);
-            console.log("nodes in edges: ", tempArr.length);
-
             /*
              * Configuration parameters
              * @iterations: Maximum number of iterations before finishing, Default - 100, Type - Real Number
@@ -1157,38 +1133,6 @@ var SMTGenetic = (function (global) {
                 "nodes": nodes,
                 "edges": EdgeList
             };
-
-            /*
-             * Graph dataset generation
-             * */
-
-            // for(var i = 0; i < nodes.length; i++)
-            // console.log(nodes.length);
-            //
-            // for (var i = 0; i < edges.length; i++)
-            // console.log(edges.length);
-            //
-            // var max = 1;
-            // var min = 1;
-            // var sum = 0;
-            // for (var it = graphEdgeList.vertices(), kv; !(kv = it.next()).done;) {
-            //    var key   = kv.value[0],
-            //        value = kv.value[1];
-            //    // iterates over all vertices of the graph
-            //
-            //    if(graphEdgeList.outDegree(key) >= max)
-            //        max = graphEdgeList.outDegree(key);
-            //
-            //    if(graphEdgeList.outDegree(key) <= min)
-            //        min = graphEdgeList.outDegree(key);
-            //
-            //    sum = sum + graphEdgeList.outDegree(key);
-            // }
-            //
-            // console.log("min: " + min + " avg: " + sum/graphEdgeList.vertexCount() + " max: " + max);
-            //
-            // console.log("vertexCount: " + graphEdgeList.vertexCount());
-            // console.log("edgeCount: " + graphEdgeList.edgeCount());
 
             /*
              * GA starts beyond this point
