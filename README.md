@@ -9,7 +9,7 @@ Please do the following steps to install the SMT-Genetic in your workspace:
 - Open `index.html` home page in the browser
 
 ### SMT-Genetic workflow
-This tool consists of two panel: `left panel` shows some brain regions and `right panel` visualizes a given set of brain regions. The user will select some brain regions of interest on the `left panel` and the `right panel` will show the connectivity of the selected brain regions.
+This tool consists of two panel: `left panel` shows some brain regions and `right panel` visualizes a given set of brain regions. The user will select some brain regions of interest on the `left panel` and the `right panel` will show the connectivity of the selected brain regions. Press `Ctrl+F` and enter a brain region to quickly find it on the `left panel`.
 <center><img src=images/SMTVisualization.png /></center>
 
 ### Accessibility
