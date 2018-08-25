@@ -34,10 +34,10 @@
     </style>
 
     <!--bringing in the dependencies-->
-    <script src="libs/jquery.min.js"></script>
-    <script src="libs/d3.min.js"></script>
-    <script src="libs/graph.full.js"></script>
-    <script src="libs/genetic.js"></script>
+    <script src="node_modules/graph.js/dist/graph.full.js"></script>
+    <script src="node_modules/genetic-js/lib/genetic.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/d3/d3.min.js"></script>
 </head>
 <body>
 
@@ -47,7 +47,7 @@
 <div class="container">
     SELECT an Example&ensp;
 
-    <select id="example" name="example">
+    <select id="example" name="example" onclick="$mainUtils.selectExample();">
         <option value="...select an Example" selected>...select an Example</option>
         <option value="SMT-Fails-1">SMT-Genetic improvement 1</option>
         <option value="SMT-Fails-2">SMT-Genetic improvement 2</option>
