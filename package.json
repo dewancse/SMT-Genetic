@@ -9,11 +9,9 @@
   "author": "Dewan Sarwar",
   "license": "MIT",
   "dependencies": {
-    "cytoscape": "^3.2.16",
-    "d3": "^3.5.6",
-    "fifo": "^2.1.0",
+    "d3": "^5.7.0",
     "genetic-js": "^0.1.14",
     "graph.js": "^1.21.1",
-    "jquery": "^2.1.4"
+    "jquery": "^3.3.1"
   }
 }

@@ -685,16 +685,15 @@ var SMTGenetic = (function (global) {
                 .attr("width", width)
                 .attr("height", height);
 
-            var color = d3.scale.category20();
+            var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-            var force = d3.layout.force()
-                .nodes(d3.values(nodes))
-                .links(links)
-                .size([width, height])
-                .linkDistance(100)
-                .charge(-1000)
-                .on("tick", tick)
-                .start();
+            var simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(function (d) {
+                    return d.name;
+                }))
+                .force("charge", d3.forceManyBody().strength(-100))
+                .force("center", d3.forceCenter(width / 3, height / 2))
+                .force("link", d3.forceLink().distance(100).strength(0.1));
 
             /*
              * filter unique species from the result
@@ -713,7 +712,7 @@ var SMTGenetic = (function (global) {
 
             // add the links and the arrows with unique colors for each species
             var path = svg.append("svg:g").selectAll("path")
-                .data(force.links())
+                .data(links)
                 .enter().append("svg:path")
                 .attr("class", "link")
                 .style("stroke", function (d) {
@@ -738,12 +737,15 @@ var SMTGenetic = (function (global) {
                 })
                 .attr("marker-end", "url(#end)");
 
-            // define the nodes
-            var node = svg.selectAll(".node")
-                .data(force.nodes())
+            var node = svg.append("g")
+                .attr("class", "nodes")
+                .selectAll("circle")
+                .data(d3.values(nodes))
                 .enter().append("g")
-                .attr("class", "node")
-                .call(force.drag);
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
 
             // add the nodes
             node.append("circle")
@@ -771,6 +773,13 @@ var SMTGenetic = (function (global) {
                     return d.name;
                 });
 
+            simulation
+                .nodes(d3.values(nodes))
+                .on("tick", tick);
+
+            simulation.force("link")
+                .links(links);
+
             // add the curvy lines
             function tick() {
                 path.attr("d", function (d) {
@@ -788,6 +797,23 @@ var SMTGenetic = (function (global) {
                 node.attr("transform", function (d) {
                     return "translate(" + d.x + "," + d.y + ")";
                 });
+            }
+
+            function dragstarted(d) {
+                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+
+            function dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
             }
         }
 
