@@ -212,44 +212,44 @@ var SMTGenetic = (function (global) {
                 * Comment out all outputSMT and LongestWeight
                 * */
                 // var RequiredNodeList = [
-//     "subiculum",
-//     "cortical area 3a",
-//     "pallium",
-//     "hippocampus",
-//     "hypothalamus"
-// ];
-// var RequiredNodeList2 = [
-//     "subiculum",
-//     "cortical area 3a",
-//     "pallium",
-//     "hippocampus",
-//     "hypothalamus"
-// ];
-// mutationVal = 0.5;
+                //     "subiculum",
+                //     "cortical area 3a",
+                //     "pallium",
+                //     "hippocampus",
+                //     "hypothalamus"
+                // ];
+                // var RequiredNodeList2 = [
+                //     "subiculum",
+                //     "cortical area 3a",
+                //     "pallium",
+                //     "hippocampus",
+                //     "hypothalamus"
+                // ];
+                // mutationVal = 0.5;
 
                 /* Test-4 SMT and SMT-Genetic both works (SMT-Works-1.png)
                 * Works for mutation 0.2, crossover 0.9, iteration 100, size 250
                 * Uncomment Test-4 outputSMT
                 */
                 // var RequiredNodeList = [
-//     "precommissural nucleus",
-//     "nucleus of the posterior commissure",
-//     "claustrum",
-//     "visual area 1",
-//     "visual area 2",
-//     "pallium",
-//     "hippocampus"
-// ];
-// var RequiredNodeList2 = [
-//     "precommissural nucleus",
-//     "nucleus of the posterior commissure",
-//     "claustrum",
-//     "visual area 1",
-//     "visual area 2",
-//     "pallium",
-//     "hippocampus"
-// ];
-// mutationVal = 0.2;
+                //     "precommissural nucleus",
+                //     "nucleus of the posterior commissure",
+                //     "claustrum",
+                //     "visual area 1",
+                //     "visual area 2",
+                //     "pallium",
+                //     "hippocampus"
+                // ];
+                // var RequiredNodeList2 = [
+                //     "precommissural nucleus",
+                //     "nucleus of the posterior commissure",
+                //     "claustrum",
+                //     "visual area 1",
+                //     "visual area 2",
+                //     "pallium",
+                //     "hippocampus"
+                // ];
+                // mutationVal = 0.2;
             }
         }
     }
@@ -786,12 +786,16 @@ var SMTGenetic = (function (global) {
                     var dx = d.target.x - d.source.x,
                         dy = d.target.y - d.source.y,
                         dr = Math.sqrt(dx * dx + dy * dy);
-                    return "M" +
-                        d.source.x + "," +
-                        d.source.y + "A" +
-                        dr + "," + dr + " 0 0,1 " +
-                        d.target.x + "," +
-                        d.target.y;
+
+                    // For making curvy lines
+                    // return "M" +
+                    //     d.source.x + "," +
+                    //     d.source.y + "A" +
+                    //     dr + "," + dr + " 0 0,1 " +
+                    //     d.target.x + "," +
+                    //     d.target.y;
+
+                    return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
                 });
 
                 node.attr("transform", function (d) {
@@ -819,31 +823,31 @@ var SMTGenetic = (function (global) {
 
         /* Pre-process longest weight from the tests data below */
         /* !!!!!!!!!! DOES NOT WORK !!!!!!!!!! */
-        //Test-3 SMT fails but SMT-Genetic works (SMT-Fails-3.png)
-// var outputSMT = [
-//     ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
-//     ["entorhinal cortex", "claustrum", 2, "macaque"],
-//     ["claustrum", "cortical area 3a", 2, "macaque"],
-//     ["claustrum", "temporopolar area tg", 2, "macaque"],
-//     ["temporopolar area tg", "hypothalamus", 2, "macaque"],
-//     ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
-//     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
-//     ["hippocampus", "pallium", 5, "Birds"]
-// ];
+        // Test-3 SMT fails but SMT-Genetic works (SMT-Fails-3.png)
+        // var outputSMT = [
+        //     ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
+        //     ["entorhinal cortex", "claustrum", 2, "macaque"],
+        //     ["claustrum", "cortical area 3a", 2, "macaque"],
+        //     ["claustrum", "temporopolar area tg", 2, "macaque"],
+        //     ["temporopolar area tg", "hypothalamus", 2, "macaque"],
+        //     ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
+        //     ["hippocampus", "pallium", 5, "Birds"]
+        // ];
 
         //Test-4 SMT and SMT-Genetic both works (SMT-Works-1.png)
-// var outputSMT = [
-//     ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
-//     ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
-//     ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
-//     ["dorsomedial visual area", "claustrum", 2, "macaque"],
-//     ["claustrum", "visual area 1", 2, "macaque"],
-//     ["visual area 1", "visual area 2", 2, "Homo sapiens"],
-//     ["claustrum", "entorhinal cortex", 2, "macaque"],
-//     ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
-//     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
-//     ["hippocampus", "pallium", 7, "Birds"]
-// ];
+        // var outputSMT = [
+        //     ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
+        //     ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
+        //     ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
+        //     ["dorsomedial visual area", "claustrum", 2, "macaque"],
+        //     ["claustrum", "visual area 1", 2, "macaque"],
+        //     ["visual area 1", "visual area 2", 2, "Homo sapiens"],
+        //     ["claustrum", "entorhinal cortex", 2, "macaque"],
+        //     ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
+        //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
+        //     ["hippocampus", "pallium", 7, "Birds"]
+        // ];
 
         var LongestWeight;
         var FindMaxPathEdges = function () {
@@ -913,8 +917,8 @@ var SMTGenetic = (function (global) {
             return MaxEdge;
         }
 
-        // LongestWeight = FindMaxPathEdges();
-        // console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
+        LongestWeight = FindMaxPathEdges();
+        console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
         /* Making Graph */
 
