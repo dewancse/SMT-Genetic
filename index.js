@@ -65,6 +65,40 @@ var SMTGenetic = (function (global) {
                         ["medial superior temporal area", "cortical area 46", 2, "macaque"]
                     ];
 
+                    // Test 3: SMT Fails but SMT-Genetic works
+                    // RequiredNodeList = [
+                    //     "subiculum",
+                    //     "cortical area 3a",
+                    //     "pallium",
+                    //     "hippocampus",
+                    //     "hypothalamus"
+                    // ];
+                    // RequiredNodeList2 = [
+                    //     "subiculum",
+                    //     "cortical area 3a",
+                    //     "pallium",
+                    //     "hippocampus",
+                    //     "hypothalamus"
+                    // ];
+                    // mutationVal = 0.5;
+                    //
+                    // outputSMT = [
+                    //     ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
+                    //     ["entorhinal cortex", "claustrum", 2, "macaque"],
+                    //     ["claustrum", "cortical area 3a", 2, "macaque"],
+                    //     ["claustrum", "temporopolar area tg", 2, "macaque"],
+                    //     ["temporopolar area tg", "hypothalamus", 2, "macaque"],
+                    //     ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
+                    //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
+                    //     ["hippocampus", "pallium", 5, "Birds"]
+                    // ];
+
+                    //7(c) in GA.jpg
+                    // RequiredNodeList = [1, 2, 3, 4, 5, 6];
+                    // RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
+                    //
+                    // outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
+
                     $("#example option")[i].selected = false;
 
                     SMT();
@@ -921,6 +955,9 @@ var SMTGenetic = (function (global) {
         console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
         /* Making Graph */
+        //7(c) in GA.jpg
+        // var nodes = [1, 2, 3, 4, 5, 6];
+        // var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
         //test-5 (Getting nodes and edges from data.json)
         var nodes = [];
@@ -972,6 +1009,17 @@ var SMTGenetic = (function (global) {
                 , "webWorkers": false
                 , "fittestAlwaysSurvives": true
             };
+
+            //7(c) in GA.jpg
+            // var config = {
+            //     "iterations": 3
+            //     , "size": 3
+            //     , "crossover": 0.9
+            //     , "mutation": 0.2
+            //     , "skip": 0
+            //     , "webWorkers": false
+            //     , "fittestAlwaysSurvives": true
+            // };
 
             var graphDFS = new Graph();
 
