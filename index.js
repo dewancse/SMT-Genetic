@@ -9,6 +9,8 @@ var mutationVal;
 var RequiredNodeList = [];
 var RequiredNodeList2 = [];
 var outputSMT = [];
+var longestDistance;
+// var flag = false;
 
 var SMTGenetic = (function (global) {
 
@@ -50,6 +52,7 @@ var SMTGenetic = (function (global) {
                         "globus pallidus internal part"
                     ];
                     mutationVal = 0.3;
+                    longestDistance = 8;
 
                     //Test-1 SMT fails but SMT-Genetic works (SMT-Fails-1.png)
                     outputSMT = [
@@ -64,40 +67,6 @@ var SMTGenetic = (function (global) {
                         ["cortical area 46", "nucleus medialis dorsalis thalami", 2, "macaque"],
                         ["medial superior temporal area", "cortical area 46", 2, "macaque"]
                     ];
-
-                    // Test 3: SMT Fails but SMT-Genetic works
-                    // RequiredNodeList = [
-                    //     "subiculum",
-                    //     "cortical area 3a",
-                    //     "pallium",
-                    //     "hippocampus",
-                    //     "hypothalamus"
-                    // ];
-                    // RequiredNodeList2 = [
-                    //     "subiculum",
-                    //     "cortical area 3a",
-                    //     "pallium",
-                    //     "hippocampus",
-                    //     "hypothalamus"
-                    // ];
-                    // mutationVal = 0.5;
-                    //
-                    // outputSMT = [
-                    //     ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
-                    //     ["entorhinal cortex", "claustrum", 2, "macaque"],
-                    //     ["claustrum", "cortical area 3a", 2, "macaque"],
-                    //     ["claustrum", "temporopolar area tg", 2, "macaque"],
-                    //     ["temporopolar area tg", "hypothalamus", 2, "macaque"],
-                    //     ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
-                    //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
-                    //     ["hippocampus", "pallium", 5, "Birds"]
-                    // ];
-
-                    //7(c) in GA.jpg
-                    // RequiredNodeList = [1, 2, 3, 4, 5, 6];
-                    // RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
-                    //
-                    // outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
 
                     $("#example option")[i].selected = false;
 
@@ -132,6 +101,7 @@ var SMTGenetic = (function (global) {
                         "globus pallidus internal part"
                     ];
                     mutationVal = 0.3;
+                    longestDistance = 8;
 
                     // Test-2 SMT fails but SMT-Genetic works (SMT-Fails-2.png)
                     // Commented out "supplementary sensory area" in the RequiredNodeList
@@ -152,6 +122,51 @@ var SMTGenetic = (function (global) {
                 }
 
                 // example #3
+                if ($("#example option")[i].innerText == "SMT-Genetic improvement 3") {
+
+                    $("#svgVisualize").html("<div class='text-center'>" +
+                        "Finding connectivity between " +
+                        "\"subiculum\", \"cortical area 3a\", \"pallium\", " +
+                        "\"hippocampus\", and \"hypothalamus\" brain regions " +
+                        "using a Genetic algorithm to improve the performance of our Steiner Minimal Tree approximation algorithm</div>" +
+                        "<br/>" +
+                        "<div class='text-center'><img src='images/ajax-loader.gif'></div>");
+
+                    /* Test-3 SMT fails but SMT-Genetic works (SMT-Fails-3.png)*/
+                    RequiredNodeList = [
+                        "subiculum",
+                        "cortical area 3a",
+                        "pallium",
+                        "hippocampus",
+                        "hypothalamus"
+                    ];
+                    RequiredNodeList2 = [
+                        "subiculum",
+                        "cortical area 3a",
+                        "pallium",
+                        "hippocampus",
+                        "hypothalamus"
+                    ];
+                    mutationVal = 0.5;
+                    longestDistance = 7;
+
+                    outputSMT = [
+                        ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
+                        ["entorhinal cortex", "claustrum", 2, "macaque"],
+                        ["claustrum", "cortical area 3a", 2, "macaque"],
+                        ["claustrum", "temporopolar area tg", 2, "macaque"],
+                        ["temporopolar area tg", "hypothalamus", 2, "macaque"],
+                        ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
+                        ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
+                        ["hippocampus", "pallium", 5, "Birds"]
+                    ];
+
+                    $("#example option")[i].selected = false;
+
+                    SMT();
+                }
+
+                // example #4
                 if ($("#example option")[i].innerText == "SMT and SMT-Genetic both works 1") {
 
                     $("#svgVisualize").html("<div class='text-center'>" +
@@ -181,6 +196,7 @@ var SMTGenetic = (function (global) {
                         "flocculus"
                     ];
                     mutationVal = 0.3;
+                    longestDistance = 8;
 
                     //Test-5 SMT and SMT-Genetic both works (SMT-Works-2.png)
                     outputSMT = [
@@ -200,7 +216,7 @@ var SMTGenetic = (function (global) {
                     SMT();
                 }
 
-                // example #4
+                // example #5
                 if ($("#example option")[i].innerText == "SMT and SMT-Genetic both works 2") {
 
                     $("#svgVisualize").html("<div class='text-center'>" +
@@ -225,6 +241,7 @@ var SMTGenetic = (function (global) {
                         "hippocampus"
                     ];
                     mutationVal = 0.2;
+                    longestDistance = 8;
 
                     //Test-6 SMT and SMT-Genetic both works (SMT-Works-3.png)
                     outputSMT = [
@@ -240,50 +257,67 @@ var SMTGenetic = (function (global) {
                     SMT();
                 }
 
-                /* !!!!!!!!!! DOES NOT WORK !!!!!!!!!! */
-                /* Test-3 SMT and SMT-Genetic both works (SMT-Fails-3.png)
-                * Works for mutation 0.5, crossover 0.9, iteration 100, size 250
-                * Comment out all outputSMT and LongestWeight
-                * */
-                // var RequiredNodeList = [
-                //     "subiculum",
-                //     "cortical area 3a",
-                //     "pallium",
-                //     "hippocampus",
-                //     "hypothalamus"
-                // ];
-                // var RequiredNodeList2 = [
-                //     "subiculum",
-                //     "cortical area 3a",
-                //     "pallium",
-                //     "hippocampus",
-                //     "hypothalamus"
-                // ];
-                // mutationVal = 0.5;
-
-                /* Test-4 SMT and SMT-Genetic both works (SMT-Works-1.png)
-                * Works for mutation 0.2, crossover 0.9, iteration 100, size 250
-                * Uncomment Test-4 outputSMT
-                */
-                // var RequiredNodeList = [
-                //     "precommissural nucleus",
-                //     "nucleus of the posterior commissure",
-                //     "claustrum",
-                //     "visual area 1",
-                //     "visual area 2",
-                //     "pallium",
-                //     "hippocampus"
-                // ];
-                // var RequiredNodeList2 = [
-                //     "precommissural nucleus",
-                //     "nucleus of the posterior commissure",
-                //     "claustrum",
-                //     "visual area 1",
-                //     "visual area 2",
-                //     "pallium",
-                //     "hippocampus"
-                // ];
-                // mutationVal = 0.2;
+                // // 7(c) in the manuscript or SMT-Works-1
+                // if ($("#example option")[i].innerText == "7(c) in the manuscript") {
+                //
+                //     $("#svgVisualize").html("<div class='text-center'>" +
+                //         "Finding connectivity between " +
+                //         "\"1\", \"2\", \"3\", \"4\", " +
+                //         "\"5\", and \"6\" nodes " +
+                //         "using a Genetic algorithm</div>" +
+                //         "<br/>" +
+                //         "<div class='text-center'><img src='images/ajax-loader.gif'></div>");
+                //
+                //     /* 7(c) in the manuscript */
+                //     // RequiredNodeList = [1, 2, 3, 4, 5, 6];
+                //     // RequiredNodeList2 = [1, 2, 3, 4, 5, 6];
+                //     // outputSMT = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
+                //     //
+                //     // mutationVal = 0.2;
+                //     // longestDistance = 4;
+                //     // flag = true;
+                //
+                //     /* SMT-Works-1 */
+                //     RequiredNodeList = [
+                //         "precommissural nucleus",
+                //         "nucleus of the posterior commissure",
+                //         "claustrum",
+                //         "visual area 1",
+                //         "visual area 2",
+                //         "pallium",
+                //         "hippocampus"
+                //     ];
+                //     RequiredNodeList2 = [
+                //         "precommissural nucleus",
+                //         "nucleus of the posterior commissure",
+                //         "claustrum",
+                //         "visual area 1",
+                //         "visual area 2",
+                //         "pallium",
+                //         "hippocampus"
+                //     ];
+                //     mutationVal = 0.2;
+                //     longestDistance = 7;
+                //
+                //     //Test-4 SMT and SMT-Genetic both works (SMT-Works-1.png)
+                //     outputSMT = [
+                //         ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
+                //         ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
+                //         ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
+                //         ["dorsomedial visual area", "claustrum", 2, "macaque"],
+                //         ["claustrum", "visual area 1", 2, "macaque"],
+                //         ["visual area 1", "visual area 2", 2, "Homo sapiens"],
+                //         ["claustrum", "entorhinal cortex", 2, "macaque"],
+                //         ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
+                //         ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
+                //         ["hippocampus", "pallium", 7, "Birds"]
+                //     ];
+                //
+                //
+                //     $("#example option")[i].selected = false;
+                //
+                //     SMT();
+                // }
             }
         }
     }
@@ -855,34 +889,6 @@ var SMTGenetic = (function (global) {
             }
         }
 
-        /* Pre-process longest weight from the tests data below */
-        /* !!!!!!!!!! DOES NOT WORK !!!!!!!!!! */
-        // Test-3 SMT fails but SMT-Genetic works (SMT-Fails-3.png)
-        // var outputSMT = [
-        //     ["subiculum", "entorhinal cortex", 1, "Homo sapiens"],
-        //     ["entorhinal cortex", "claustrum", 2, "macaque"],
-        //     ["claustrum", "cortical area 3a", 2, "macaque"],
-        //     ["claustrum", "temporopolar area tg", 2, "macaque"],
-        //     ["temporopolar area tg", "hypothalamus", 2, "macaque"],
-        //     ["temporopolar area tg", "nucleus medialis dorsalis thalami", 2, "macaque"],
-        //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
-        //     ["hippocampus", "pallium", 5, "Birds"]
-        // ];
-
-        //Test-4 SMT and SMT-Genetic both works (SMT-Works-1.png)
-        // var outputSMT = [
-        //     ["precommissural nucleus", "nucleus of the posterior commissure", 5, "Rat"],
-        //     ["nucleus of the posterior commissure", "nucleus pulvinaris lateralis thalami", 2, "macaque"],
-        //     ["nucleus pulvinaris lateralis thalami", "dorsomedial visual area", 2, "macaque"],
-        //     ["dorsomedial visual area", "claustrum", 2, "macaque"],
-        //     ["claustrum", "visual area 1", 2, "macaque"],
-        //     ["visual area 1", "visual area 2", 2, "Homo sapiens"],
-        //     ["claustrum", "entorhinal cortex", 2, "macaque"],
-        //     ["entorhinal cortex", "nucleus medialis dorsalis thalami", 2, "macaque"],
-        //     ["nucleus medialis dorsalis thalami", "hippocampus", 2, "macaque"],
-        //     ["hippocampus", "pallium", 7, "Birds"]
-        // ];
-
         var LongestWeight;
         var FindMaxPathEdges = function () {
 
@@ -954,17 +960,13 @@ var SMTGenetic = (function (global) {
         LongestWeight = FindMaxPathEdges();
         console.log("Preprocessed SMT Longest Weight: ", LongestWeight);
 
-        /* Making Graph */
-        //7(c) in GA.jpg
-        // var nodes = [1, 2, 3, 4, 5, 6];
-        // var edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
-
         //test-5 (Getting nodes and edges from data.json)
         var nodes = [];
         var edges = [];
 
         d3.json("data.json", function (data) {
 
+            // if (flag == false) {
             for (var i = 0; i < data["nodes"].length; i++) {
                 nodes[i] = data["nodes"][i];
             }
@@ -984,6 +986,13 @@ var SMTGenetic = (function (global) {
                     }
                 }
             }
+            // }
+            // else {
+            //     //7(c) in the manuscript
+            //     nodes = [1, 2, 3, 4, 5, 6];
+            //     edges = [[1, 2, 1], [2, 3, 1], [3, 4, 1], [4, 5, 1]];
+            //     flag = false;
+            // }
 
             /*
              * Configuration parameters
@@ -1123,7 +1132,7 @@ var SMTGenetic = (function (global) {
             for (var m = 0; m < RequiredNodeList.length; m++) {
                 console.log("RequiredNode: ", RequiredNodeList[m]);
 
-                temp = dfs(graphDFS, RequiredNodeList[m], 0, 8); // 8 is the maximum weight between two required node
+                temp = dfs(graphDFS, RequiredNodeList[m], 0, longestDistance); // 8 is the maximum weight between two required node
 
                 console.log("Required # of Paths: ", paths.length);
                 console.log("Required # of Edges: ", temp.length);
