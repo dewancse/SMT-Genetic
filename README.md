@@ -17,6 +17,7 @@ Genetic algorithm takes sometime to find a connectivity path among a given set o
 Following output illustrates the connectivity path among a set of brain regions selected by the user from the dropdown menu.
 
 ![Example GA output](images/GA-output.png)
+
 *A screenshoot illustrating a connectivity path among a set of brain regions for the execution of a GA example selected from the dropdown menu. Here brain regions are connected by macaque species whose edge weight is 2 (see below), so total edge weight is 18. Red brain regions are required nodes (a given set of brain regions), whereas black brain regions are intermediate nodes (or non-required nodes) which help connect the required nodes.*
 
 ### Species weight
