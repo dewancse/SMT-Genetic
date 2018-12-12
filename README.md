@@ -1,22 +1,26 @@
 ### Connected Brain Regions (SMT-Genetic)
-SMT-Genetic is a web-based tool to find connectivity between a given set of brain regions. Specifically, this tool uses a Genetic algorithm to improve the performance of a Steiner Minimal Tree approximation algorithm to find the best connections between the brain regions.
+SMT-Genetic is a web-based tool to find a connectivity path among a given set of brain regions. Specifically, this tool uses a genetic algorithm to find a better connectivity path among the brain regions than [SMT-Neurophysiology](https://github.com/dewancse/connected-brain-regions). This tool is deployed at this address: https://dewancse.github.io/SMT-Genetic/index.html
 
 ### Installing SMT-Genetic
 Please do the following steps to install the SMT-Genetic in your workspace:
 
 - `git clone https://github.com/dewancse/SMT-Genetic.git`
 - `npm install` to install packages
-- Open `index.html` home page in the browser
+- open `index.html` home page in the browser
 
 ### SMT-Genetic workflow
-Genetic algorithm takes a while to compute a given set of brain regions. For convenience, we have set-up four examples for the user. Select an example from the dropdown menu and wait for a while to get the connectivity between the a set of brain regions.
-<center><img src=images/GA-output-select.png /></center>
+Genetic algorithm takes sometime to find a connectivity path among a given set of brain regions. For convenience, we have set up five examples in the form of a dropdown menu. Users can choose an example from the dropdown menu and wait for sometime to get the connectivity path among a set of brain regions.
 
-Following output illustrates the connectivity of a set of brain regions selected by the user in the above phase.
-<center><img src=images/GA-output.png /></center>
+![Example GA select](images/GA-output-select.png)
+*A screenshoot illustrating an execution of a GA example selected from the dropdown menu to get the connectivity path among a set of brain regions.*
 
-### Species Weight
-We have considered four species with an arbitrary weight value as a representation of edge weights. In the above figure, the user can compute total weight by considering the species weight as follows:
+Following output illustrates the connectivity path among a set of brain regions selected by the user from the dropdown menu.
+
+![Example GA output](images/GA-output.png)
+*A screenshoot illustrating a connectivity path among a set of brain regions for the execution of a GA example selected from the dropdown menu. Here brain regions are connected by macaque species whose edge weight is 2 (see below), so total edge weight is 18. Red brain regions are required nodes (a given set of brain regions), whereas black brain regions are intermediate nodes (or non-required nodes) which help connect the required nodes.*
+
+### Species weight
+We have considered four species with an arbitrary weight value to represent edge weights. In the above example, the user can compute total weight by considering the following species weight:
 
 | Species | Weight |
 | --- | --- |
